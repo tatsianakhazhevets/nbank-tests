@@ -683,3 +683,25 @@ Authorization: Basic QnJpdHRhOkNDYWEzMyEh
 {
   "name": "Britta Smith"
 }
+
+### T34_Negative test
+// Autorized third user can not use space at the beggining of the name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic QnJpdHRhOkNDYWEzMyEh
+
+{
+  "name": " Britta Smith"
+}
+
+### T35_Negative test
+// Autorized third user can not use space at the end of the name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic QnJpdHRhOkNDYWEzMyEh
+
+{
+  "name": "Britta Smith "
+}
