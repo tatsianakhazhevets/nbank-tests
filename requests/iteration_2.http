@@ -1,0 +1,707 @@
+/*
+DOCKER IMAGE TAG is with_validation_fix
+*/
+
+
+### DEPOSIT TEST ###
+
+### T1_P1
+// Get auth token for admin user
+# ADMIN Authorization: Basic YWRtaW46YWRtaW4=
+POST http://localhost:4111/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+### T1_P2
+// Admin creates a first user
+# FIRST USER Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+# "username": "Inga"
+# "password": "AAbb11!!"
+POST http://localhost:4111/api/v1/admin/users
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW4=
+
+{
+  "username": "{{$random.name.firstName}}",
+  "password": "AAbb11!!",
+  "role": "USER"
+}
+
+### T1_P3
+// Authorized first user creates the account
+# test data: account id 1, balance 0
+POST http://localhost:4111/api/v1/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T1_Positive test
+// Authorized user can deposit money
+# test data: balance = 0.0
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 1,
+  "balance": 2500.00
+}
+
+### T2_Positive test
+// Authorized user can deposit 5000.00
+# test data: balance = 2500.0, account id 1
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 1,
+  "balance": 5000.00
+}
+
+### T3_Positive test
+// Authorized user can deposit 4999.99
+# test data: balance = 7500.0, account id 1
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 1,
+  "balance": 4999.99
+}
+
+### T4_Negative test
+// Authorized user cannot deposit 5000.01
+# test data: balance = 12499.99, account id 1
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 1,
+  "balance": 5000.01
+}
+
+### T5_Positive test
+// Deposit amount must be positive – test with 0,01
+# test data: balance = 12499.99, account id 1
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 1,
+  "balance": 0.01
+}
+
+### T6_Positive test
+// Deposit amount must be positive – test with 0,02
+# test data: balance = 12500.0, account id 1
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 1,
+  "balance": 0.02
+}
+
+### T7_Negative test
+// Deposit amount must be positive – test with 0,00
+# test data: balance = 12500.02, account id 1
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic RGFyaXVzOkFBYmIxMSEh
+
+{
+  "id": 1,
+  "balance": 0.00
+}
+
+
+### T8_P4
+// Admin creates a second user
+# SECOND USER Authorization: Basic Q2FybDpCQmFhMjIhIQ==
+# "username": "Carl"
+# "password": "BBaa22!!"
+POST http://localhost:4111/api/v1/admin/users
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW4=
+
+{
+  "username": "{{$random.name.firstName}}",
+  "password": "BBaa22!!",
+  "role": "USER"
+}
+
+### T8_P5
+// Authorized second user does not have the accaunt
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic Q2FybDpCQmFhMjIhIQ==
+
+### T8_Negative test
+// Authorized second user cannot deposit money without the account
+# test data: no account
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic Q2FybDpCQmFhMjIhIQ==
+
+{
+  "id": 1,
+  "balance": 1000.50
+}
+
+### T9_P6
+// Admin creates a third user
+# THIRD USER Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+# "username": "Lynwood"
+# "password": "CCaa33!!"
+POST http://localhost:4111/api/v1/admin/users
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW4=
+
+{
+  "username": "{{$random.name.firstName}}",
+  "password": "CCaa33!!",
+  "role": "USER"
+}
+
+### T9_P7
+// Authorized third user creates the account
+# test data: account id 2, balance 0
+POST http://localhost:4111/api/v1/accounts
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+### T9_Negative test
+// Authorized first user cannot deposit money to authorized third user account
+# test data: account id 2 (belongs to the third user), third user balance 0.00
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 2,
+  "balance": 1000.50
+}
+
+
+
+
+### TRANSFER TESTS ###
+
+### T10_P8
+// Authorized first user creates the second account
+# test data: first user have account id 1
+POST http://localhost:4111/api/v1/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T10_P9
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T10_Positive test
+// Authorized first user can transfer money to authorized third user
+# test data:
+# account id 1, balance 12500.02; account id 3, balance 0.0 -> first user
+# account id 2, balance 0.0 -> third user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 2,
+  "amount": 100.20
+}
+
+### T11_P10
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T11_P11
+// Retrieve the accounts of authorized third user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+### T11_Positive test
+// Authorized first user can transfer money between their accounts
+# test data:
+# account id 1, balance 12399.82; account id 3, balance 0.0 -> first user
+# account id 2, balance 100.2 -> third user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 3,
+  "amount": 50.0
+}
+
+### T12_P11
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T12_Positive test
+// Authorized first user can transfer 10000.00 between their accounts
+# test data:
+# account id 1, balance 12349.82; account id 3, balance 50.0 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 3,
+  "amount": 10000.00
+}
+
+### T13_P12
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T13_Positive test
+// Authorized first user can transfer 9999.99 between their accounts
+# test data:
+# account id 1, balance 2349.8199999999997; account id 3, balance 10050.0 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 3,
+  "receiverAccountId": 1,
+  "amount": 9999.99
+}
+
+### T14_P13
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T15_Negative test
+// Authorized first user can not transfer 10000.01 between their accounts
+# test data:
+# account id 1, balance 12349.81; account id 3, balance 50.01000000000022 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 3,
+  "amount": 10000.01
+}
+
+### T16_P14
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T16_P15
+// Retrieve the accounts of authorized third user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+### T16_Positive test
+// Authorized first user can transfer 10000.00 to authorized third user
+# test data:
+# account id 1, balance 12349.81; account id 3, balance 50.01000000000022 -> first user
+# account id 2, balance 100.2 -> third user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 2,
+  "amount": 10000.00
+}
+
+### T17_P16
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T17_P17
+// Retrieve the accounts of authorized third user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+### T17_Positive test
+// Authorized third user can transfer 9999.99 to authorized first user
+# test data:
+# account id 1, balance 2349.8099999999995; account id 3, balance 50.01000000000022 -> first user
+# account id 2, balance 10100.2 -> third user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "senderAccountId": 2,
+  "receiverAccountId": 1,
+  "amount": 9999.99
+}
+
+### T18_P18
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T18_P19
+// Retrieve the accounts of authorized third user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+### T18_Negative test
+// Authorized first user cannot transfer 10000.01 to authorized third user
+# test data:
+# account id 1, balance 12349.8; account id 3, balance 50.01000000000022 -> first user
+# account id 2, balance 100.21000000000095 -> third user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 2,
+  "amount": 10000.01
+}
+
+### T19_P20
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T19_Positive test
+// Transfer amount must be positive – test with 0,01
+# test data:
+# account id 1, balance 12349.8; account id 3, balance 50.01000000000022 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 3,
+  "amount": 0.01
+}
+
+### T20_P21
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T20_Positive test
+// Transfer amount must be positive – test with 0,02
+# test data:
+# account id 1, balance 12349.789999999999; account id 3, balance 50.020000000000216 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 3,
+  "amount": 0.02
+}
+
+### T21_P22
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T21_Negative test
+// Transfer amount must be positive – test with 0.00 within first user accounts
+# test data:
+# account id 1, balance 12349.769999999999; account id 3, balance 50.04000000000022 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 3,
+  "amount": 0.00
+}
+
+
+### T22_Negative test
+// Transfer amount must be positive – test with 0.00 among accounts of the differents users
+# test data:
+# account id 1, balance 12349.769999999999; account id 3, balance 50.04000000000022 -> first user
+# # account id 2, balance 100.21000000000095 -> third user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 1,
+  "receiverAccountId": 2,
+  "amount": 0.00
+}
+
+### T23_P23
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T23_Positive test
+// Authorized first user can transfer less then 10000.00 and equals to their balance
+# test data:
+# account id 1, balance 12349.769999999999; account id 3, balance 50.04000000000022 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 3,
+  "receiverAccountId": 1,
+  "amount": 50.04
+}
+
+### T24_P24
+// Retrieve the accounts of authorized first user
+# NOTE: after T23_Positive test the place of the comma was changed for the balance value - account id 3, balance 2.2026824808563106E-13
+# Retest of the test case is located below
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+
+### T25_P25
+// Authorized first user creates the third account
+# test data: account id 4, balance 0
+POST http://localhost:4111/api/v1/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T25_P26
+// Authorized first user creates the fourth account
+# test data: account id 5, balance 0
+POST http://localhost:4111/api/v1/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T25_P27
+// Authorized first user deposits 4000.00
+# test data: account id 4, balance = 0.0
+POST http://localhost:4111/api/v1/accounts/deposit
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "id": 4,
+  "balance": 4000.00
+}
+
+### T25_Positive test
+// Authorized first user can transfer less then 10000 and equals to their balance
+# test data:
+# account id 4, balance 4000.0; account id 5, balance 0.0 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 4,
+  "receiverAccountId": 5,
+  "amount": 4000.00
+}
+
+### T26_P28
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T26_Positive test
+// Authorized first user can transfer less then 10000 and equals to their balance minus 0.01
+# test data:
+# account id 4, balance 0.0; account id 5, balance 4000.0 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 5,
+  "receiverAccountId": 4,
+  "amount": 3999.99
+}
+
+### T27_P29
+// Retrieve the accounts of authorized first user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T27_Negative test
+// Authorized first user cannot transfer less their balance (balance plus 0.01) between their accounts
+# test data:
+# account id 4, balance 3999.99; account id 5, balance 0.010000000000218279 -> first user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 4,
+  "receiverAccountId": 5,
+  "amount": 4000.0
+}
+
+### T28_P30
+// Retrieve the accounts of authorized third user
+GET http://localhost:4111/api/v1/customer/accounts
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+### T28_Negative test
+// Authorized first user cannot transfer less their balance (balance plus 0.1) to account of authorized third user
+# test data:
+# account id 4, balance 3999.99 -> first user
+# account id 2, balance 100.21000000000095 -> third user
+POST http://localhost:4111/api/v1/accounts/transfer
+Content-Type: application/json
+Authorization: Basic SW5nYTpBQWJiMTEhIQ==
+
+{
+  "senderAccountId": 4,
+  "receiverAccountId": 2,
+  "amount": 4000.00
+}
+
+
+
+
+### NAME TESTS ###
+
+### T29_P32
+// User admin retrieve the users
+GET http://localhost:4111/api/v1/admin/users
+Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW4=
+
+### T29_Positive test
+// Autorized third user can change their name
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "Britta Smith"
+}
+
+### T30_Negative test
+// Autorized third user can not change their name without missed space in one world
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "BrittaSmith"
+}
+
+### T30_Negative test
+// Autorized third user can not change their name consist of three worlds
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "Britta Smith Jons"
+}
+
+### T31_Negative test
+// Autorized third user can not use digits in the name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "Britta1 Smith"
+}
+
+### T31_Negative test
+// Autorized third user can not use special signs in the name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "Britta! Smith"
+}
+
+### T32_Negative test
+// Autorized third user can not use dash in the name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "Britta-Maria Smith"
+}
+
+### T33_Positive test
+// Autorized third user can change their name on the same name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "Britta Smith"
+}
+
+### T34_Negative test
+// Autorized third user can not use space at the beggining of the name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": " Britta Smith"
+}
+
+### T35_Negative test
+// Autorized third user can not use space at the end of the name
+# test data: "name": "Britta Smith"
+PUT http://localhost:4111/api/v1/customer/profile
+Content-Type: application/json
+Authorization: Basic THlud29vZDpDQ2FhMzMhIQ==
+
+{
+  "name": "Britta Smith "
+}
