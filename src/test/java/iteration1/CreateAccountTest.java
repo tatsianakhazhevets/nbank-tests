@@ -2,6 +2,7 @@ package iteration1;
 
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 
@@ -18,8 +19,8 @@ public class CreateAccountTest extends ConfigClass {
                 .header("Authorization", "Basic YWRtaW46YWRtaW4=")
                 .body("""
                         {
-                          "username": "kate200033",
-                          "password": "Kate2000#33",
+                          "username": "kate200055",
+                          "password": "Kate2000#355",
                            "role": "USER"
                         }
                         """)
@@ -35,8 +36,8 @@ public class CreateAccountTest extends ConfigClass {
                 .accept(ContentType.JSON)
                 .body("""
                         {
-                          "username": "kate200033",
-                          "password": "Kate2000#33"
+                          "username": "kate200055",
+                          "password": "Kate2000#355"
                         }
                         """)
                 .post("http://localhost:4111/api/v1/auth/login")
@@ -47,16 +48,26 @@ public class CreateAccountTest extends ConfigClass {
                 .header("Authorization");
 
         //создаем аккаунт(счет)
-        given()
+        int accountId = given()
                 .header("Authorization", userAuthHeader)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .post("http://localhost:4111/api/v1/accounts")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.SC_CREATED);
+                .statusCode(HttpStatus.SC_CREATED)
+                .extract()
+                .path("id");
 
         //запросить все аккаунты пользователя и проверить, что наш аккаунт там
-
+        given()
+                .header("Authorization", userAuthHeader)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .get("http://localhost:4111/api/v1/customer/accounts")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", Matchers.hasItem(accountId));
     }
 }
