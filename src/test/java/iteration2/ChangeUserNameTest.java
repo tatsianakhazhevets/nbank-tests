@@ -26,8 +26,8 @@ public class ChangeUserNameTest extends ConfigClass {
                 .header("Authorization", ADMIN_AUTH)
                 .body("""
                         {
-                          "username": "Britta88",
-                          "password": "BRIta25!!88",
+                          "username": "Britta3",
+                          "password": "BRIta25!!3",
                            "role": "USER"
                         }
                         """)
@@ -42,8 +42,8 @@ public class ChangeUserNameTest extends ConfigClass {
                 .accept(ContentType.JSON)
                 .body("""
                         {
-                          "username": "Britta88",
-                          "password": "BRIta25!!88"
+                          "username": "Britta3",
+                          "password": "BRIta25!!3"
                         }
                         """)
                 .post("http://localhost:4111/api/v1/auth/login")
@@ -69,6 +69,17 @@ public class ChangeUserNameTest extends ConfigClass {
                 .statusCode(HttpStatus.SC_OK)
                 .body("customer.name", Matchers.equalTo("Britta Smith"));
 
+        // Check profile
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", userToken)
+                .get("http://localhost:4111/api/v1/customer/profile")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", Matchers.equalTo("Britta Smith"));
+
         // Authorized user can change their name on the same value (T33_Positive test)
         given()
                 .contentType(ContentType.JSON)
@@ -84,25 +95,36 @@ public class ChangeUserNameTest extends ConfigClass {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("customer.name", Matchers.equalTo("Britta Smith"));
+
+        // Check profile
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", userToken)
+                .get("http://localhost:4111/api/v1/customer/profile")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", Matchers.equalTo("Britta Smith"));
     }
 
 
     public static Stream<Arguments> changeNameInvalidCases() {
         return Stream.of(
                 // Authorized user cannot change their name without missed space in one world (T30_Negative test)
-                Arguments.of("BrittaPlus12", "HHgg88!102", "USER", "BrittaSmith", "Name must contain two words with letters only"),
+                Arguments.of("BrittaPlus11", "HHgg88!11", "USER", "BrittaSmith", "Name must contain two words with letters only"),
                 // Authorized user cannot change their name consist of the three worlds (T30_Negative test)
-                Arguments.of("BrittaPlus22", "HHgg88!22", "USER", "Britta Smith Jons", "Name must contain two words with letters only"),
+                Arguments.of("BrittaPlus21", "HHgg88!21", "USER", "Britta Smith Jons", "Name must contain two words with letters only"),
                 // Authorized user cannot use digits in the name (T31_Negative test)
-                Arguments.of("BrittaPlus32", "HHgg88!32", "USER", "Britta1 Smith", "Name must contain two words with letters only"),
+                Arguments.of("BrittaPlus31", "HHgg88!31", "USER", "Britta1 Smith", "Name must contain two words with letters only"),
                 // Authorized user cannot use special signs in the name (T31_Negative test)
-                Arguments.of("BrittaPlus312", "HHgg88!312", "USER", "Britta! Smith", "Name must contain two words with letters only"),
+                Arguments.of("BrittaPlus41", "HHgg88!41", "USER", "Britta! Smith", "Name must contain two words with letters only"),
                 // Authorized user cannot use dash in the name (T32_Negative test)
-                Arguments.of("BrittaPlus42", "HHgg88!42", "USER", "Britta-Maria Smith", "Name must contain two words with letters only"),
+                Arguments.of("BrittaPlus51", "HHgg88!51", "USER", "Britta-Maria Smith", "Name must contain two words with letters only"),
                 // Authorized user cannot use space at the beginning of the name (T34_Negative test)
-                Arguments.of("BrittaPlus52", "HHgg88!52", "USER", " Britta Smith", "Name must contain two words with letters only"),
+                Arguments.of("BrittaPlus61", "HHgg88!61", "USER", " Britta Smith", "Name must contain two words with letters only"),
                 // Authorized user cannot use space at the end of the name (T35_Negative test)
-                Arguments.of("BrittaPlus62", "HHgg88!62", "USER", "Britta Smith ", "Name must contain two words with letters only")
+                Arguments.of("BrittaPlus71", "HHgg88!71", "USER", "Britta Smith ", "Name must contain two words with letters only")
         );
     }
 
@@ -167,6 +189,19 @@ public class ChangeUserNameTest extends ConfigClass {
                 .put("http://localhost:4111/api/v1/customer/profile")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.SC_BAD_REQUEST);
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body(Matchers.equalTo(errorMessage));
+
+        // Check profile
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", userToken)
+                .get("http://localhost:4111/api/v1/customer/profile")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", Matchers.not(Matchers.equalTo(name)))
+                .body("name", Matchers.nullValue());
     }
 }

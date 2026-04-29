@@ -19,19 +19,19 @@ public class TransferMoneyTest extends ConfigClass {
     public static Stream<Arguments> validTransfersBetweenOwnAccounts() {
         return Stream.of(
                 // Authorized user can transfer money between their accounts (T11_Positive test)
-                Arguments.of("Alex5", "SSqq11!!5", "USER", 2500, 100),
+                Arguments.of("Alex1", "SSqq11!!1", "USER", 2500, 100),
                 // Authorized user can transfer 10000.00 between their accounts (T12_Positive test)
-                Arguments.of("Sasha5", "SSss11!!5", "USER", 5000, 10000.00),
+                Arguments.of("Sasha1", "SSss11!!1", "USER", 5000, 10000.00),
                 // Authorized user can transfer 9999.99 between their accounts (T13_Positive test)
-                Arguments.of("Pavel5", "SSpp11!!5", "USER", 5000, 9999.99),
+                Arguments.of("Pavel1", "SSpp11!!1", "USER", 5000, 9999.99),
                 // Transfer amount must be positive – test with 0,01 (T19_Positive test)
-                Arguments.of("Nina5", "SSnn11!!5", "USER", 5000, 0.01),
+                Arguments.of("Nina1", "SSnn11!!1", "USER", 5000, 0.01),
                 // Transfer amount must be positive – test with 0,02 (T20_Positive test)
-                Arguments.of("Misha5", "SSmm11!!5", "USER", 5000, 0.02),
+                Arguments.of("Misha1", "SSmm11!!1", "USER", 5000, 0.02),
                 // Authorized user can transfer less than 10000.00 and equals to their balance (T23_Positive test)
-                Arguments.of("Denis5", "DDmm11!!5", "USER", 2000, 4000),
+                Arguments.of("Denis1", "DDmm11!!1", "USER", 2000, 4000),
                 // Authorized first user can transfer less than 10000 and equals to their balance minus 0.01 (T26_Positive test)
-                Arguments.of("Alena5", "SSll11!!5", "USER", 2000, 3999.99)
+                Arguments.of("Alena1", "SSll11!!1", "USER", 2000, 3999.99)
         );
     }
 
@@ -181,7 +181,9 @@ public class TransferMoneyTest extends ConfigClass {
                 .body("find { it.id == " + firstAccountId + " }.transactions.find { it.type == 'TRANSFER_OUT' }.amount",
                         Matchers.equalTo((float) transferAmount))
                 .body("find { it.id == " + firstAccountId + " }.balance",
-                        Matchers.equalTo((float) ((deposit + deposit) - transferAmount)));
+                        Matchers.equalTo((float) ((deposit + deposit) - transferAmount)))
+                .body("find { it.id == " + secondAccountId + " }.balance",
+                        Matchers.equalTo((float) (transferAmount)));
     }
 
 
@@ -339,6 +341,19 @@ public class TransferMoneyTest extends ConfigClass {
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body(Matchers.equalTo(errorMessage));
+
+        // Check transfer
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", userToken)
+                .get("http://localhost:4111/api/v1/customer/accounts")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("find { it.id == " + firstAccountId + " }.balance", Matchers.equalTo((float) (deposit * 3)))
+                .body("find { it.id == " + secondAccountId + " }.transactions.size()", Matchers.equalTo(0))
+                .body("find { it.id == " + secondAccountId + " }.balance", Matchers.equalTo(0.0f));
     }
 
 
@@ -347,9 +362,9 @@ public class TransferMoneyTest extends ConfigClass {
                 // Authorized first user can transfer money to the authorized second user (T10_Positive test)
                 Arguments.of("IrinaFirst13", "QQqq11!!13", "IrinaSecond13", "qqQQ11!!13", "USER", 2500, 100),
                 // Authorized first user can transfer 10000.00 to authorized second user (T16_Positive test)
-                Arguments.of("OlegFirst7", "OOqq11!!7", "OlegSecond7", "qqOO11!!7", "USER", 5000, 10000),
+                Arguments.of("OlegFirst3", "OOqq11!!3", "OlegSecond3", "qqOO11!!3", "USER", 5000, 10000),
                 // Authorized first user can transfer 9999.99 to authorized second user (T17_Positive test)
-                Arguments.of("KirillFirst7", "KKqq11!!7", "KirillSecond7", "qqKK11!!7", "USER", 5000, 9999.99)
+                Arguments.of("KirillFirst3", "KKqq11!!3", "KirillSecond3", "qqKK11!!3", "USER", 5000, 9999.99)
         );
     }
 
@@ -536,7 +551,8 @@ public class TransferMoneyTest extends ConfigClass {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("find { it.id == " + secondUserAccountId + " }.transactions.find { it.type == 'TRANSFER_IN' }.amount",
-                        Matchers.equalTo((float) transferAmount));
+                        Matchers.equalTo((float) transferAmount))
+                .body("find { it.id == " + secondUserAccountId + " }.balance", Matchers.equalTo((float) transferAmount));
 
         // Check transfer on first user account
         given()
@@ -749,5 +765,28 @@ public class TransferMoneyTest extends ConfigClass {
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body(Matchers.equalTo(errorMessage));
+
+        // Check transfer on second user account
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", secondUserToken)
+                .get("http://localhost:4111/api/v1/customer/accounts")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("find { it.id == " + secondUserAccountId + " }.transactions.size()", Matchers.equalTo(0))
+                .body("find { it.id == " + secondUserAccountId + " }.balance", Matchers.equalTo(0.0f));
+
+        // Check transfer on first user account
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", firstUserToken)
+                .get("http://localhost:4111/api/v1/customer/accounts")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("find { it.id == " + firstUserAccountId + " }.balance", Matchers.equalTo((float) (deposit * 3)));
     }
 }

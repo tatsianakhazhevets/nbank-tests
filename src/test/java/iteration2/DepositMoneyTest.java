@@ -20,15 +20,15 @@ public class DepositMoneyTest extends ConfigClass {
     public static Stream<Arguments> depositPositiveCases() {
         return Stream.of(
                 // Authorized user can deposit money (T1_Positive test)
-                Arguments.of("Inga4", "AAbb11!!4", "USER", 2500),
+                Arguments.of("Inga3", "AAbb11!!3", "USER", 2500),
                 // Authorized user can deposit 5000.00 (T2_Positive test)
-                Arguments.of("Kate4", "BBaa11!!4", "USER", 5000),
+                Arguments.of("Kate3", "BBaa11!!3", "USER", 5000),
                 // Authorized user can deposit 4999.99 (T3_Positive test)
-                Arguments.of("Boris4", "GGbb11!!4", "USER", 4999.99),
+                Arguments.of("Boris3", "GGbb11!!3", "USER", 4999.99),
                 // Deposit amount must be positive – test with 0,01 (T5_Positive test)
-                Arguments.of("Anna4", "GGyy11!!4", "USER", 0.01),
+                Arguments.of("Anna3", "GGyy11!!3", "USER", 0.01),
                 // Deposit amount must be positive – test with 0,02 (T6_Positive test)
-                Arguments.of("Olga4", "GGyy11!!4", "USER", 0.02)
+                Arguments.of("Olga3", "GGyy11!!3", "USER", 0.02)
         );
     }
 
@@ -117,16 +117,18 @@ public class DepositMoneyTest extends ConfigClass {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("[0].transactions[0].amount", Matchers.equalTo((float) deposit));
+                .body("find { it.id == " + accountId + " }.transactions.find { it.type == 'DEPOSIT' }.amount",
+                        Matchers.equalTo((float) deposit))
+                .body("find { it.id == " + accountId + " }.balance", Matchers.equalTo((float) deposit));
     }
 
 
     public static Stream<Arguments> depositInvalidCases() {
         return Stream.of(
                 // Authorized user cannot deposit 5000.01 (T4_Negative)
-                Arguments.of("Inga15", "AAbb11!!15", "USER", 5000.01, "Deposit amount cannot exceed 5000"),
+                Arguments.of("Inga13", "AAbb11!!13", "USER", 5000.01, "Deposit amount cannot exceed 5000"),
                 // Deposit amount must be positive – test with 0,00 (T7_Negative)
-                Arguments.of("Anna15", "GGyy11!!15", "USER", 0.00, "Deposit amount must be at least 0.01")
+                Arguments.of("Anna13", "GGyy11!!13", "USER", 0.00, "Deposit amount must be at least 0.01")
         );
     }
 
@@ -207,6 +209,18 @@ public class DepositMoneyTest extends ConfigClass {
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body(Matchers.equalTo(errorMessage));
+
+        // Check deposit
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", userToken)
+                .get("http://localhost:4111/api/v1/customer/accounts")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("find { it.id == " + accountId + " }.transactions.size()", Matchers.equalTo(0))
+                .body("find { it.id == " + accountId + " }.balance", Matchers.is(0.0f));
     }
 
 
@@ -220,8 +234,8 @@ public class DepositMoneyTest extends ConfigClass {
                 .header("Authorization", ADMIN_AUTH)
                 .body("""
                         {
-                          "username": "Maria5",
-                          "password": "KKdd11!!5",
+                          "username": "Maria3",
+                          "password": "KKdd11!!3",
                            "role": "USER"
                         }
                         """
@@ -238,8 +252,8 @@ public class DepositMoneyTest extends ConfigClass {
                 .body(
                         """
                                 {
-                                  "username": "Maria5",
-                                  "password": "KKdd11!!5"
+                                  "username": "Maria3",
+                                  "password": "KKdd11!!3"
                                 }
                                 """
                 )
@@ -267,6 +281,17 @@ public class DepositMoneyTest extends ConfigClass {
                 .assertThat()
                 .statusCode(HttpStatus.SC_FORBIDDEN)
                 .body(Matchers.equalTo("Unauthorized access to account"));
+
+        // Check empty account
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", userToken)
+                .get("http://localhost:4111/api/v1/customer/accounts")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("", Matchers.empty());
     }
 
 
@@ -280,8 +305,8 @@ public class DepositMoneyTest extends ConfigClass {
                 .header("Authorization", ADMIN_AUTH)
                 .body("""
                         {
-                          "username": "Anastasia4",
-                          "password": "LLll55!!4",
+                          "username": "Anastasia2",
+                          "password": "LLll55!!2",
                            "role": "USER"
                         }
                         """
@@ -298,8 +323,8 @@ public class DepositMoneyTest extends ConfigClass {
                 .body(
                         """
                                       {
-                                         "username": "Anastasia4",
-                                         "password": "LLll55!!4"
+                                         "username": "Anastasia2",
+                                         "password": "LLll55!!2"
                                       }
                                 """
                 )
@@ -317,8 +342,8 @@ public class DepositMoneyTest extends ConfigClass {
                 .header("Authorization", ADMIN_AUTH)
                 .body("""
                         {
-                          "username": "Alex4",
-                          "password": "LLxx55!!4",
+                          "username": "Alex2",
+                          "password": "LLxx55!!2",
                            "role": "USER"
                         }
                         """
@@ -335,8 +360,8 @@ public class DepositMoneyTest extends ConfigClass {
                 .body(
                         """
                                       {
-                                         "username": "Alex4",
-                                         "password": "LLxx55!!4"
+                                         "username": "Alex2",
+                                         "password": "LLxx55!!2"
                                       }
                                 """
                 )
@@ -375,5 +400,17 @@ public class DepositMoneyTest extends ConfigClass {
                 .assertThat()
                 .statusCode(HttpStatus.SC_FORBIDDEN)
                 .body(Matchers.equalTo("Unauthorized access to account"));
+
+        // Check deposit
+        given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .header("Authorization", secondUserToken)
+                .get("http://localhost:4111/api/v1/customer/accounts")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("find { it.id == " + secondUserAccountId + " }.transactions.size()", Matchers.equalTo(0))
+                .body("find { it.id == " + secondUserAccountId + " }.balance", Matchers.is(0.0f));
     }
 }
