@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 
-public class CreateUserTest extends ConfigClass {
+public class CreateUserTestJunior extends ConfigClassJunior {
 
     @Test
     public void adminCanCreateUserWithCorrectData() {

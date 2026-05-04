@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.util.List;
 
-public class ConfigClass {
+public class ConfigClassJunior {
 
     @BeforeAll
     public static void setUpRestAssured() {
