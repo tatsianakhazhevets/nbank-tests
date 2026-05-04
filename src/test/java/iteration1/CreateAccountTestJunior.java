@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class CreateAccountTest extends ConfigClass {
+public class CreateAccountTestJunior extends ConfigClassJunior {
 
     @Test
     public void userCanCreateAccountTest() {
@@ -44,6 +44,7 @@ public class CreateAccountTest extends ConfigClass {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                //Параметр 5: достать как переменную из ответа
                 .extract()
                 .header("Authorization");
 

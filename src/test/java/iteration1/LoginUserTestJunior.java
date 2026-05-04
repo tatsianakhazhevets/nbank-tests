@@ -8,24 +8,29 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.*;
 
-public class LoginUserTest extends ConfigClass {
+public class LoginUserTestJunior extends ConfigClassJunior {
 
     @Test
     public void adminCanGenerateAuthTokenTest() {
+
+        // Жесткая связкаЖ: эндрпоинт , JSON запрос + ответ - жесткая связка всегда проектируется с помощью дата классов или енумов
         given()
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
+                .spec(requestSpecification) // Параметр 1: спецификация запроса (хедеры)
+                // Параметер 2: тело запроса
                 .body("""
                         {
                           "username": "admin",
                           "password": "admin"
                         }
                         """)
+                // Параметр 3: эндпоинт
                 .post("http://localhost:4111/api/v1/auth/login")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .header("Authorization", "Basic YWRtaW46YWRtaW4=");
+        // Параметр 4: спецификация ответа (статус код, проверки)
+        //.spec(ResponseSpecification);
     }
 
 
