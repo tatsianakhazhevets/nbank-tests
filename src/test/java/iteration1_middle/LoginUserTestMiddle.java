@@ -1,15 +1,15 @@
-package iteration1;
+package iteration1_middle;
 
-import iteration1.generators.RandomData;
-import iteration1.models.CreateUserRequest;
-import iteration1.models.LoginUserRequest;
-import iteration1.models.UserRole;
+import iteration1_middle.generators.RandomData;
+import iteration1_middle.models.CreateUserRequest;
+import iteration1_middle.models.LoginUserRequest;
+import iteration1_middle.models.UserRole;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import iteration1.requests.AdminCreateUserRequester;
-import iteration1.requests.LoginUserRequester;
-import iteration1.specs.RequestSpecs;
-import iteration1.specs.ResponseSpecs;
+import iteration1_middle.requests.AdminCreateUserRequester;
+import iteration1_middle.requests.LoginUserRequester;
+import iteration1_middle.specs.RequestSpecs;
+import iteration1_middle.specs.ResponseSpecs;
 
 import static io.restassured.RestAssured.given;
 

@@ -1,13 +1,13 @@
-package iteration1;
+package iteration1_middle;
 
-import iteration1.generators.RandomData;
-import iteration1.models.CreateUserRequest;
-import iteration1.models.UserRole;
+import iteration1_middle.generators.RandomData;
+import iteration1_middle.models.CreateUserRequest;
+import iteration1_middle.models.UserRole;
 import org.junit.jupiter.api.Test;
-import iteration1.requests.AdminCreateUserRequester;
-import iteration1.requests.CreateAccountRequester;
-import iteration1.specs.RequestSpecs;
-import iteration1.specs.ResponseSpecs;
+import iteration1_middle.requests.AdminCreateUserRequester;
+import iteration1_middle.requests.CreateAccountRequester;
+import iteration1_middle.specs.RequestSpecs;
+import iteration1_middle.specs.ResponseSpecs;
 
 public class CreateAccountTestMiddle {
 

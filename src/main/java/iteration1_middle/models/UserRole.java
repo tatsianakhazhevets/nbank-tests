@@ -1,4 +1,4 @@
-package iteration1.models;
+package iteration1_middle.models;
 
 public enum UserRole {
     USER,

@@ -1,9 +1,9 @@
-package iteration1.requests;
+package iteration1_middle.requests;
 
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import iteration1.models.BaseModel;
+import iteration1_middle.models.BaseModel;
 
 public abstract class Request<T extends BaseModel> {
     protected RequestSpecification requestSpecification;

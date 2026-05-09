@@ -1,4 +1,4 @@
-package iteration1;
+package iteration1_junior;
 
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;

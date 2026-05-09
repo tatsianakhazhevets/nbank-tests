@@ -1,4 +1,4 @@
-package iteration1;
+package iteration2_junior;
 
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.util.List;
 
-public class ConfigClassJunior {
+public class ConfigClass {
 
     @BeforeAll
     public static void setUpRestAssured() {
