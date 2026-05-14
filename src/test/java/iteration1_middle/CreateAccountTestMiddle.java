@@ -30,4 +30,6 @@ public class CreateAccountTestMiddle {
                 ResponseSpecs.entityWasCreated())
                 .post(null);
     }
+
+    // запросить все аккаунты пользователя и проверить, что наш аккаунт там
 }
