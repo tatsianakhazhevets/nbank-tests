@@ -4,8 +4,6 @@ import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import iteration1.models.BaseModel;
-import iteration2_middle.models.CreateUserRequest;
-import iteration2_middle.requests.PostRequest;
 
 import static io.restassured.RestAssured.given;
 
