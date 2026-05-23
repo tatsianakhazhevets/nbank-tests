@@ -21,4 +21,14 @@ public class RetrieveUserProfileRequester extends GetRequest<BaseModel> {
                 .assertThat()
                 .spec(responseSpecification);
     }
+
+    @Override
+    public ValidatableResponse get() {
+        return given()
+                .spec(requestSpecification)
+                .get("/api/v1/customer/profile")
+                .then()
+                .assertThat()
+                .spec(responseSpecification);
+    }
 }

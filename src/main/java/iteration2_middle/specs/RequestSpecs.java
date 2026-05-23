@@ -11,6 +11,9 @@ import iteration2_middle.requests.LoginUserRequester;
 import java.util.List;
 
 public class RequestSpecs {
+
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     private RequestSpecs() {
     }
 

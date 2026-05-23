@@ -15,4 +15,5 @@ public abstract class GetRequest<T extends BaseModel> {
     }
 
     public abstract ValidatableResponse get(T model);
+    public abstract ValidatableResponse get();
 }

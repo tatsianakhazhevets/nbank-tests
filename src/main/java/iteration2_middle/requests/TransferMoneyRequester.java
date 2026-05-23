@@ -22,4 +22,14 @@ public class TransferMoneyRequester extends PostRequest<TransferMoneyRequest> {
                 .assertThat()
                 .spec(responseSpecification);
     }
+
+    @Override
+    public ValidatableResponse post() {
+        return given()
+                .spec(requestSpecification)
+                .post("/api/v1/accounts/transfer")
+                .then()
+                .assertThat()
+                .spec(responseSpecification);
+    }
 }

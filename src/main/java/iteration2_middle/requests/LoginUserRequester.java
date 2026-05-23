@@ -22,4 +22,14 @@ public class LoginUserRequester extends PostRequest<LoginUserRequest> {
                 .assertThat()
                 .spec(responseSpecification);
     }
+
+    @Override
+    public ValidatableResponse post() {
+        return given()
+                .spec(requestSpecification)
+                .post("/api/v1/auth/login")
+                .then()
+                .assertThat()
+                .spec(responseSpecification);
+    }
 }

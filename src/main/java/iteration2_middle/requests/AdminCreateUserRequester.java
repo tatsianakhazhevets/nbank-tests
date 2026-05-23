@@ -22,4 +22,14 @@ public class AdminCreateUserRequester extends PostRequest<CreateUserRequest> {
                 .assertThat()
                 .spec(responseSpecification);
     }
+
+    @Override
+    public ValidatableResponse post() {
+        return given()
+                .spec(requestSpecification)
+                .post("/api/v1/admin/users")
+                .then()
+                .assertThat()
+                .spec(responseSpecification);
+    }
 }

@@ -15,4 +15,5 @@ public abstract class PostRequest<T extends BaseModel> {
     }
 
     public abstract ValidatableResponse post(T model);
+    public abstract ValidatableResponse post();
 }

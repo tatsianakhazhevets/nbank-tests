@@ -21,7 +21,7 @@ public class ChangeUserNameMiddleTest extends BaseTest {
     @Test
     public void authorizedUserCanChangeNameSuccessfully() {
 
-        String name = "Britta Smith";
+        String name = RandomDataGenerator.getName();
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
                 .username(RandomDataGenerator.getUsername())
@@ -39,31 +39,35 @@ public class ChangeUserNameMiddleTest extends BaseTest {
                         .username(createUserRequest.getUsername())
                         .password(createUserRequest.getPassword())
                         .build())
-                .header("Authorization", Matchers.notNullValue());
+                .header(RequestSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
 
         ChangeUserNameRequest changeUserNameRequest = ChangeUserNameRequest.builder()
                 .name(name)
                 .build();
 
         // Authorized user can change their name (T29_Positive test)
-        new ChangeUserNameRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        new ChangeUserNameRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
                 .put(changeUserNameRequest);
 
-        ChangeUserNameResponse changeUserNameResponse = new RetrieveUserProfileRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        ChangeUserNameResponse changeUserNameResponse = new RetrieveUserProfileRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
-                .get(null)
+                .get()
                 .extract().as(ChangeUserNameResponse.class);
 
         softly.assertThat(changeUserNameResponse.getName()).isEqualTo(name);
 
-        new ChangeUserNameRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        new ChangeUserNameRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
                 .put(changeUserNameRequest);
 
-        ChangeUserNameResponse changeUserNameTwiceResponse = new RetrieveUserProfileRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        ChangeUserNameResponse changeUserNameTwiceResponse = new RetrieveUserProfileRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
-                .get(null)
+                .get()
                 .extract().as(ChangeUserNameResponse.class);
 
         softly.assertThat(changeUserNameTwiceResponse.getName()).isEqualTo(name);
@@ -73,19 +77,19 @@ public class ChangeUserNameMiddleTest extends BaseTest {
     public static Stream<Arguments> changeNameInvalidCases() {
         return Stream.of(
                 // Authorized user cannot change their name without missed space in one world (T30_Negative test)
-                Arguments.of("BrittaSmith", "Name must contain two words with letters only"),
+                Arguments.of("BrittaSmith", ResponseSpecs.NAME_MUST_CONTAINS_TWO_WORDS),
                 // Authorized user cannot change their name consist of the three worlds (T30_Negative test)
-                Arguments.of("Britta Smith Jons", "Name must contain two words with letters only"),
+                Arguments.of("Britta Smith Jons", ResponseSpecs.NAME_MUST_CONTAINS_TWO_WORDS),
                 // Authorized user cannot use digits in the name (T31_Negative test)
-                Arguments.of("Britta1 Smith", "Name must contain two words with letters only"),
+                Arguments.of("Britta1 Smith", ResponseSpecs.NAME_MUST_CONTAINS_TWO_WORDS),
                 // Authorized user cannot use special signs in the name (T31_Negative test)
-                Arguments.of("Britta! Smith", "Name must contain two words with letters only"),
+                Arguments.of("Britta! Smith", ResponseSpecs.NAME_MUST_CONTAINS_TWO_WORDS),
                 // Authorized user cannot use dash in the name (T32_Negative test)
-                Arguments.of("Britta-Maria Smith", "Name must contain two words with letters only"),
+                Arguments.of("Britta-Maria Smith", ResponseSpecs.NAME_MUST_CONTAINS_TWO_WORDS),
                 // Authorized user cannot use space at the beginning of the name (T34_Negative test)
-                Arguments.of(" Britta Smith", "Name must contain two words with letters only"),
+                Arguments.of(" Britta Smith", ResponseSpecs.NAME_MUST_CONTAINS_TWO_WORDS),
                 // Authorized user cannot use space at the end of the name (T35_Negative test)
-                Arguments.of("Britta Smith ", "Name must contain two words with letters only")
+                Arguments.of("Britta Smith ", ResponseSpecs.NAME_MUST_CONTAINS_TWO_WORDS)
         );
     }
 
@@ -109,19 +113,21 @@ public class ChangeUserNameMiddleTest extends BaseTest {
                         .username(createUserRequest.getUsername())
                         .password(createUserRequest.getPassword())
                         .build())
-                .header("Authorization", Matchers.notNullValue());
+                .header(RequestSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
 
         ChangeUserNameRequest changeUserNameRequest = ChangeUserNameRequest.builder()
                 .name(name)
                 .build();
 
-        new ChangeUserNameRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        new ChangeUserNameRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsBadRequest(errorMessage))
                 .put(changeUserNameRequest);
 
-        ChangeUserNameResponse changeUserNameResponse = new RetrieveUserProfileRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        ChangeUserNameResponse changeUserNameResponse = new RetrieveUserProfileRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
-                .get(null)
+                .get()
                 .extract().as(ChangeUserNameResponse.class);
 
         softly.assertThat(changeUserNameResponse.getName()).isNotEqualTo(name);

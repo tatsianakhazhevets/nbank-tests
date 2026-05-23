@@ -22,4 +22,14 @@ public class DepositMoneyRequester extends PostRequest<DepositMoneyRequest> {
                 .assertThat()
                 .spec(responseSpecification);
     }
+
+    @Override
+    public ValidatableResponse post() {
+        return given()
+                .spec(requestSpecification)
+                .post("/api/v1/accounts/deposit")
+                .then()
+                .assertThat()
+                .spec(responseSpecification);
+    }
 }

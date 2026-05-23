@@ -1,12 +1,8 @@
 package iteration2_middle;
 
 import io.restassured.common.mapper.TypeRef;
-import iteration1.requests.CreateAccountRequester;
 import iteration2_middle.models.*;
-import iteration2_middle.requests.AdminCreateUserRequester;
-import iteration2_middle.requests.DepositMoneyRequester;
-import iteration2_middle.requests.LoginUserRequester;
-import iteration2_middle.requests.RetrieveUserAccountRequester;
+import iteration2_middle.requests.*;
 import iteration2_middle.specs.RequestSpecs;
 import iteration2_middle.specs.ResponseSpecs;
 import iteration2_middle.utils.RandomDataGenerator;
@@ -52,49 +48,50 @@ public class DepositMoneyMiddleTest extends BaseTest {
                         .username(createUserRequest.getUsername())
                         .password(createUserRequest.getPassword())
                         .build())
-                .header("Authorization", Matchers.notNullValue());
+                .header(RequestSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
 
-        int accountId = new CreateAccountRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        CreateAccountResponse accountId = new CreateAccountRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsCreated())
-                .post(null)
+                .post()
                 .extract()
-                .path("id");
+                .as(CreateAccountResponse.class);
 
         DepositMoneyRequest depositMoneyRequest = DepositMoneyRequest.builder()
-                .id(accountId)
-                .balance( deposit)
+                .id(accountId.getId())
+                .balance(deposit)
                 .build();
 
-        new DepositMoneyRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        new DepositMoneyRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
                 .post(depositMoneyRequest);
 
         List<UserAccountsResponse> userAccount = new RetrieveUserAccountRequester(
                 RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
-                .get(null)
+                .get()
                 .extract().as(new TypeRef<>() {
                 });
 
         UserAccountsResponse userAccountsResponse = userAccount.get(0);
 
         TransactionBody userDepositAmount = userAccountsResponse.getTransactions().stream()
-                .filter(t -> "DEPOSIT".equals(t.getType()))
+                .filter(t -> TransactionType.DEPOSIT.getType().equals(t.getType()))
                 .findFirst()
                 .orElseThrow();
 
-        softly.assertThat(userAccountsResponse.getBalance()).isEqualTo( deposit);
-        softly.assertThat(userDepositAmount.getAmount()).isEqualTo(  deposit);
-
+        softly.assertThat(userAccountsResponse.getBalance()).isEqualTo(deposit);
+        softly.assertThat(userDepositAmount.getAmount()).isEqualTo(deposit);
     }
 
 
     public static Stream<Arguments> depositInvalidCases() {
         return Stream.of(
                 // Authorized user cannot deposit 5000.01 (T4_Negative)
-                Arguments.of( 5000.01, "Deposit amount cannot exceed 5000"),
+                Arguments.of(5000.01, ResponseSpecs.DEPOSIT_AMOUNT_CANNOT_EXCEED_5000),
                 // Deposit amount must be positive – test with 0,00 (T7_Negative)
-                Arguments.of( 0.00, "Deposit amount must be at least 0.01")
+                Arguments.of(0.00, ResponseSpecs.DEPOSIT_AMOUNT_MUST_BE_AT_LEAST_0_01)
         );
     }
 
@@ -118,27 +115,29 @@ public class DepositMoneyMiddleTest extends BaseTest {
                         .username(createUserRequest.getUsername())
                         .password(createUserRequest.getPassword())
                         .build())
-                .header("Authorization", Matchers.notNullValue());
+                .header(RequestSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
 
-        int accountId = new CreateAccountRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        CreateAccountResponse accountId = new CreateAccountRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsCreated())
-                .post(null)
+                .post()
                 .extract()
-                .path("id");
+                .as(CreateAccountResponse.class);
 
         DepositMoneyRequest depositMoneyRequest = DepositMoneyRequest.builder()
-                .id(accountId)
-                .balance( deposit)
+                .id(accountId.getId())
+                .balance(deposit)
                 .build();
 
-        new DepositMoneyRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+        new DepositMoneyRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsBadRequest(errorMessage))
                 .post(depositMoneyRequest);
 
         List<UserAccountsResponse> userAccount = new RetrieveUserAccountRequester(
                 RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
-                .get(null)
+                .get()
                 .extract().as(new TypeRef<>() {
                 });
 
@@ -153,9 +152,6 @@ public class DepositMoneyMiddleTest extends BaseTest {
 
     @Test
     public void authorizedUserCannotDepositToNonExistingAccount() {
-
-        double deposit = 2500.00;
-        String errorMessage = "Unauthorized access to account";
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
                 .username(RandomDataGenerator.getUsername())
@@ -173,22 +169,22 @@ public class DepositMoneyMiddleTest extends BaseTest {
                         .username(createUserRequest.getUsername())
                         .password(createUserRequest.getPassword())
                         .build())
-                .header("Authorization", Matchers.notNullValue());
-
+                .header(RequestSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
 
         DepositMoneyRequest depositMoneyRequest = DepositMoneyRequest.builder()
                 .id(0)
-                .balance( deposit)
+                .balance(RandomDataGenerator.getDeposit())
                 .build();
 
-        new DepositMoneyRequester(RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
-                ResponseSpecs.requestReturnsForbidden(errorMessage))
+        new DepositMoneyRequester(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+                ResponseSpecs.requestReturnsForbidden(ResponseSpecs.UNAUTHORIZED_ACCESS_TO_ACCOUNT))
                 .post(depositMoneyRequest);
 
         List<UserAccountsResponse> userAccount = new RetrieveUserAccountRequester(
                 RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
-                .get(null)
+                .get()
                 .extract().as(new TypeRef<>() {
                 });
 
@@ -200,9 +196,6 @@ public class DepositMoneyMiddleTest extends BaseTest {
 
     @Test
     public void authorizedUserCannotDepositToAnotherUsersAccount() {
-
-        double deposit = 2500.00f;
-        String errorMessage = "Unauthorized access to account";
 
         CreateUserRequest createFirstUserRequest = CreateUserRequest.builder()
                 .username(RandomDataGenerator.getUsername())
@@ -220,7 +213,7 @@ public class DepositMoneyMiddleTest extends BaseTest {
                         .username(createFirstUserRequest.getUsername())
                         .password(createFirstUserRequest.getPassword())
                         .build())
-                .header("Authorization", Matchers.notNullValue());
+                .header(RequestSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
 
         CreateUserRequest createSecondUserRequest = CreateUserRequest.builder()
                 .username(RandomDataGenerator.getUsername())
@@ -238,28 +231,29 @@ public class DepositMoneyMiddleTest extends BaseTest {
                         .username(createSecondUserRequest.getUsername())
                         .password(createSecondUserRequest.getPassword())
                         .build())
-                .header("Authorization", Matchers.notNullValue());
+                .header(RequestSpecs.AUTHORIZATION_HEADER, Matchers.notNullValue());
 
-
-        int secondUserAccountId = new CreateAccountRequester(RequestSpecs.authUserSpec(createSecondUserRequest.getUsername(), createSecondUserRequest.getPassword()),
+        CreateAccountResponse secondUserAccountId = new CreateAccountRequester(
+                RequestSpecs.authUserSpec(createSecondUserRequest.getUsername(), createSecondUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsCreated())
-                .post(null)
+                .post()
                 .extract()
-                .path("id");
+                .as(CreateAccountResponse.class);
 
         DepositMoneyRequest depositMoneyRequest = DepositMoneyRequest.builder()
-                .id(secondUserAccountId)
-                .balance( deposit)
+                .id(secondUserAccountId.getId())
+                .balance(RandomDataGenerator.getDeposit())
                 .build();
 
-        new DepositMoneyRequester(RequestSpecs.authUserSpec(createFirstUserRequest.getUsername(),  createFirstUserRequest.getPassword()),
-                ResponseSpecs.requestReturnsForbidden(errorMessage))
+        new DepositMoneyRequester(
+                RequestSpecs.authUserSpec(createFirstUserRequest.getUsername(), createFirstUserRequest.getPassword()),
+                ResponseSpecs.requestReturnsForbidden(ResponseSpecs.UNAUTHORIZED_ACCESS_TO_ACCOUNT))
                 .post(depositMoneyRequest);
 
         List<UserAccountsResponse> userAccount = new RetrieveUserAccountRequester(
                 RequestSpecs.authUserSpec(createSecondUserRequest.getUsername(), createSecondUserRequest.getPassword()),
                 ResponseSpecs.requestReturnsOk())
-                .get(null)
+                .get()
                 .extract().as(new TypeRef<>() {
                 });
 
