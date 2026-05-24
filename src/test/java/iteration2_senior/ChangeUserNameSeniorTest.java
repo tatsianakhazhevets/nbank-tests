@@ -38,13 +38,11 @@ public class ChangeUserNameSeniorTest extends BaseTest {
                 ResponseSpecs.requestReturnsOk())
                 .put(changeUserNameRequest);
 
-        UserProfileNestedResponse changedUserName = new CrudRequester(
+        UserProfileNestedResponse changedUserName = new ValidatedCrudRequester<UserProfileNestedResponse>(
                 RequestSpecs.authUserSpec(user.getUsername(), user.getPassword()),
                 Endpoint.CUSTOMER_PROFILE_GET,
                 ResponseSpecs.requestReturnsOk())
-                .get()
-                .extract()
-                .as(UserProfileNestedResponse.class);
+                .get();
 
         AssertingClass.assertThat(changeUserNameRequest, changeUserNameResponse).match();
         softly.assertThat(changedUserName.getName()).isEqualTo(changeUserNameRequest.getName());
@@ -58,13 +56,11 @@ public class ChangeUserNameSeniorTest extends BaseTest {
                 ResponseSpecs.requestReturnsOk())
                 .put(changeUserNameRequest);
 
-        UserProfileNestedResponse changeUserNameTwiceResponse = new CrudRequester(
+        UserProfileNestedResponse changeUserNameTwiceResponse = new ValidatedCrudRequester<UserProfileNestedResponse>(
                 RequestSpecs.authUserSpec(user.getUsername(), user.getPassword()),
                 Endpoint.CUSTOMER_PROFILE_GET,
                 ResponseSpecs.requestReturnsOk())
-                .get()
-                .extract()
-                .as(UserProfileNestedResponse.class);
+                .get();
 
         AssertingClass.assertThat(changeUserNameRequest, changeUserNameSecondResponse).match();
         softly.assertThat(changeUserNameTwiceResponse.getName()).isEqualTo(changeUserNameRequest.getName());
@@ -101,13 +97,11 @@ public class ChangeUserNameSeniorTest extends BaseTest {
                 ResponseSpecs.requestReturnsBadRequest(errorMessage))
                 .put(changeUserNameRequest);
 
-        UserProfileNestedResponse changeUserNameResponse = new CrudRequester(
+        UserProfileNestedResponse changeUserNameResponse = new ValidatedCrudRequester<UserProfileNestedResponse>(
                 RequestSpecs.authUserSpec(user.getUsername(), user.getPassword()),
                 Endpoint.CUSTOMER_PROFILE_GET,
                 ResponseSpecs.requestReturnsOk())
-                .get()
-                .extract()
-                .as(UserProfileNestedResponse.class);
+                .get();
 
         softly.assertThat(changeUserNameResponse.getName()).isNotEqualTo(name);
         softly.assertThat(changeUserNameResponse.getName()).isNull();

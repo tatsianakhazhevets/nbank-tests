@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static iteration2_senior.specs.Messages.*;
+import static iteration2_senior.utils.RepeatUtil.repeat;
 
 public class TransferMoneySeniorTest extends BaseTest {
 
@@ -40,9 +41,7 @@ public class TransferMoneySeniorTest extends BaseTest {
         CreateUserRequest user = AdminStep.createUser();
         UserStep.login(user);
         CreateUserAccountResponse firstAccountId = UserStep.createUserAccount(user);
-        for (int i = 0; i < 2; i++) {
-            DepositStep.depositMoney(user, firstAccountId, deposit);
-        }
+        repeat(2, () -> DepositStep.depositMoney(user, firstAccountId, deposit));
         CreateUserAccountResponse secondAccountId = UserStep.createUserAccount(user);
 
         TransferMoneyRequest transferMoneyRequest = TransferMoneyRequest.builder()
@@ -86,9 +85,7 @@ public class TransferMoneySeniorTest extends BaseTest {
         CreateUserRequest user = AdminStep.createUser();
         UserStep.login(user);
         CreateUserAccountResponse firstAccountId = UserStep.createUserAccount(user);
-        for (int i = 0; i < 3; i++) {
-            DepositStep.depositMoney(user, firstAccountId, deposit);
-        }
+        repeat(2, () -> DepositStep.depositMoney(user, firstAccountId, deposit));
         CreateUserAccountResponse secondAccountId = UserStep.createUserAccount(user);
 
         TransferMoneyRequest transferMoneyRequest = TransferMoneyRequest.builder()
@@ -129,9 +126,7 @@ public class TransferMoneySeniorTest extends BaseTest {
         CreateUserRequest firstUser = AdminStep.createUser();
         UserStep.login(firstUser);
         CreateUserAccountResponse firstUserAccountId = UserStep.createUserAccount(firstUser);
-        for (int i = 0; i < 2; i++) {
-            DepositStep.depositMoney(firstUser, firstUserAccountId, deposit);
-        }
+        repeat(2, () -> DepositStep.depositMoney(firstUser, firstUserAccountId, deposit));
         CreateUserRequest secondUser = AdminStep.createUser();
         UserStep.login(secondUser);
         CreateUserAccountResponse secondUserAccountId = UserStep.createUserAccount(secondUser);
@@ -180,9 +175,7 @@ public class TransferMoneySeniorTest extends BaseTest {
         CreateUserRequest firstUser = AdminStep.createUser();
         UserStep.login(firstUser);
         CreateUserAccountResponse firstUserAccountId = UserStep.createUserAccount(firstUser);
-        for (int i = 0; i < 3; i++) {
-            DepositStep.depositMoney(firstUser, firstUserAccountId, deposit);
-        }
+        repeat(2, () -> DepositStep.depositMoney(firstUser, firstUserAccountId, deposit));
         CreateUserRequest secondUser = AdminStep.createUser();
         UserStep.login(secondUser);
         CreateUserAccountResponse secondUserAccountId = UserStep.createUserAccount(secondUser);
