@@ -20,7 +20,7 @@ public class CreateAccountTestJunior extends ConfigClassJunior {
                 .body("""
                         {
                           "username": "kate200055",
-                          "password": "Kate2000#355",
+                          "password": "kate200055",
                            "role": "USER"
                         }
                         """)
