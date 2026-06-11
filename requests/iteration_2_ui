@@ -1,0 +1,110 @@
+1. Deposit money
+Validation goes on API side, check frontend-backend integration.
+
+1.1 Positive ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+Step 4: User creates account
+TEST
+Step 5: User deposits money (random value from 1 to 5000)
+CHECK
+Step 6: UI alert -> Successfully deposited $sum to account accountName! + check deposit is in the transactions history
+Step 7: Backend check: confirms the money was deposited.
+
+1.2 Negative (Invalid Amount) ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+Step 4: User creates account
+TEST
+Step 5: User attempts to deposit an invalid amount (random 0, negative and greater than 5000)
+CHECK
+Step 6: UI alert -> Please deposit less or equal to 5000$. + check deposit is not in the transactions history
+Step 7: Backend check: confirms the money was not deposited
+
+1.3 Negative (No Account Selected) ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+TEST
+Step 4: User attempts to deposit money (random value from 1 to 5000) without selecting an account.
+CHECK
+Step 5: UI alert -> Please select an account. + check deposit is not in the transactions history
+Step 6: Backend check: confirms the money was not deposited.
+
+
+2. Transfer money
+Validation goes on API side, check frontend-backend integration
+
+2.1 Positive ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+Step 4: User creates account1
+Step 5: User deposits money into account1
+Step 6: User creates account2
+TEST
+Step 7: User transfers money (random value from 1 to 10000) from account1 to account2
+CHECK
+Step 8: UI alert -> Successfully transferred $sum to account accountNumber! + check transfer is in the transactions history
+Step 9: Backend check: confirms the money was transferred, balance account1 = initial balance on account 1 - transfer amount,
+balance account2 = initial balance on account 2 + transfer amount.
+
+2.2 Negative (Invalid Amount) ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+Step 4: User creates account1
+Step 5: User deposits money into account1
+Step 6: User creates account2
+TEST
+Step 7: User attempts to transfer an invalid amount (e.g., 0, a negative number, or more than 10000).
+CHECK
+Step 8: UI alert ->  Error: Transfer amount must be ... + The transfer is NOT visible in the transaction history.
+Step 9: Backend check: confirms the money was not transferred, balances on the accounts were not changed
+
+2.3 Negative (Missing Confirmation) ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+Step 4: User creates account1
+Step 5: User deposits money on account1
+Step 6: User creates account2
+TEST
+Step 7: User fills in transfer details (random value from 1 to 10000) but leaves the confirmation checkbox unchecked
+CHECK
+Step 8: UI alert -> Please fill all fields and confirm. + check transfer is not in the transactions history
+Step 9: Backend check: confirms the money was not transferred, balances on the accounts were not changed
+
+
+3. Change User Name
+Validation goes on API side, check frontend-backend integration
+
+3.1 Positive ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+TEST
+Step 4: User changes the name (valid values)
+CHECK
+Step 5: UI alert -> Name updated successfully! + check User Dashboard Welcome, new name!
+Step 6: Backend check: confirms the name was updated.
+
+3.2 Negative ->
+PRECONDITIONS
+Step 1: Admin logs in
+Step 2: Admin creates user
+Step 3: User logs in
+TEST
+Step 4: User changes the name (invalid values)
+CHECK
+Step 5: UI alert -> Name must contain two words with letters only + check User Dashboard Welcome, noname!
+Step 6: Backend check: confirms the name was not changed.
