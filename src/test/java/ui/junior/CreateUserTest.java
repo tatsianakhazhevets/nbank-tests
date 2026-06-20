@@ -1,11 +1,11 @@
 package ui.junior;
 
 import com.codeborne.selenide.*;
-import iteration1_senior.models.comparison.ModelAssertions;
-import iteration2_senior.generators.RandomModelGenerator;
-import iteration2_senior.models.CreateUserRequest;
-import iteration2_senior.models.CreateUserResponse;
-import iteration2_senior.specs.RequestSpecs;
+import apiTests.iteration1_senior.models.comparison.ModelAssertions;
+import apiTests.iteration2_senior.generators.RandomModelGenerator;
+import apiTests.iteration2_senior.models.CreateUserRequest;
+import apiTests.iteration2_senior.models.CreateUserResponse;
+import apiTests.iteration2_senior.specs.RequestSpecs;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

@@ -1,0 +1,35 @@
+package apiTests.iteration2_middle.requests;
+
+import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import apiTests.iteration2_middle.models.TransferMoneyRequest;
+
+import static io.restassured.RestAssured.given;
+
+public class TransferMoneyRequester extends PostRequest<TransferMoneyRequest> {
+    public TransferMoneyRequester(RequestSpecification requestSpecification, ResponseSpecification responseSpecification) {
+        super(requestSpecification, responseSpecification);
+    }
+
+    @Override
+    public ValidatableResponse post(TransferMoneyRequest model) {
+        return given()
+                .spec(requestSpecification)
+                .body(model)
+                .post("/api/v1/accounts/transfer")
+                .then()
+                .assertThat()
+                .spec(responseSpecification);
+    }
+
+    @Override
+    public ValidatableResponse post() {
+        return given()
+                .spec(requestSpecification)
+                .post("/api/v1/accounts/transfer")
+                .then()
+                .assertThat()
+                .spec(responseSpecification);
+    }
+}

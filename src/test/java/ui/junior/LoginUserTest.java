@@ -4,8 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
-import iteration2_senior.models.CreateUserRequest;
-import iteration2_senior.steps.AdminStep;
+import apiTests.iteration2_senior.models.CreateUserRequest;
+import apiTests.iteration2_senior.steps.AdminStep;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

@@ -1,0 +1,16 @@
+package apiTests.iteration2_senior.generators;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface DoubleGeneratingRule {
+    double min();
+
+    double max();
+
+    int range();
+}
