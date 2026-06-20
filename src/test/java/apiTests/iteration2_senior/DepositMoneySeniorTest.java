@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.stream.Stream;
+import static apiTests.iteration2_senior.specs.Messages.*;
 
 public class DepositMoneySeniorTest extends BaseTest {
 

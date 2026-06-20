@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static apiTests.iteration2_senior.utils.RepeatUtil.repeat;
+import static apiTests.iteration2_senior.specs.Messages.*;
+
 
 public class TransferMoneySeniorTest extends BaseTest {
 
