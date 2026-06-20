@@ -1,4 +1,4 @@
-package ui.junior;
+package uiTests.iteration1_junior;
 
 import com.codeborne.selenide.*;
 import apiTests.iteration1_senior.models.comparison.ModelAssertions;

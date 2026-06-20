@@ -1,4 +1,4 @@
-package ui.junior;
+package uiTests.iteration1_junior;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
