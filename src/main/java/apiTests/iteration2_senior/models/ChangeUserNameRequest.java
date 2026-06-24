@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ChangeUserNameRequest extends BaseModel {
-    @StringGeneratingRule(regex = "[A-Za-z]+ [A-Za-z]")
+    @StringGeneratingRule(regex = "[A-Za-z]{1,20}+ [A-Za-z]{1,20}")
     private String name;
 }
