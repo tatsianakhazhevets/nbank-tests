@@ -24,6 +24,12 @@ public enum Endpoint {
             "/accounts",
             BaseModel.class,
             CreateAccountResponse.class
+    ),
+
+    CUSTOMER_ACCOUNTS(
+            "/customer/accounts",
+            BaseModel.class,
+            CreateAccountResponse.class
     );
 
     private final String url;

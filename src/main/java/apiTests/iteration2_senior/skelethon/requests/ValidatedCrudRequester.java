@@ -1,6 +1,5 @@
 package apiTests.iteration2_senior.skelethon.requests;
 
-import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -10,6 +9,7 @@ import apiTests.iteration2_senior.skelethon.interfaces.CrudEndpointInterface;
 import apiTests.iteration2_senior.skelethon.interfaces.GetAllEndpointInterface;
 import apiTests.iteration2_senior.skelethon.settings.HttpRequest;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ValidatedCrudRequester<T extends BaseModel> extends HttpRequest implements CrudEndpointInterface, GetAllEndpointInterface {
@@ -52,11 +52,12 @@ public class ValidatedCrudRequester<T extends BaseModel> extends HttpRequest imp
     }
 
     @Override
-    public ValidatableResponse getAll() {
-        return crudRequester.getAll();
+    public List<T> getAll(Class<?> clazz) {
+        T[] array = (T[]) crudRequester.getAll(clazz).extract().as(clazz);
+        return Arrays.asList(array);
     }
 
-    public List<T> getAll(TypeRef<List<T>> typeRef) {
-        return getAll().extract().as(typeRef);
-    }
+    //public List<T> getAll(TypeRef<List<T>> typeRef) {
+    //    return getAll().extract().as(typeRef);
+    //}
 }

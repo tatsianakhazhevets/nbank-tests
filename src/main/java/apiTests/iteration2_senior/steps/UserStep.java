@@ -12,6 +12,7 @@ import apiTests.iteration2_senior.specs.ResponseSpecs;
 import org.hamcrest.Matchers;
 
 public class UserStep {
+    private UserStep() {};
 
     public static LoginUserResponse login(CreateUserRequest createUserRequest) {
 

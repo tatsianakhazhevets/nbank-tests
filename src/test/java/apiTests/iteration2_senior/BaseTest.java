@@ -35,8 +35,7 @@ public class BaseTest {
                 RequestSpecs.adminSpec(),
                 Endpoint.ADMIN_USERS_GET,
                 ResponseSpecs.requestReturnsOk())
-                .getAll(new TypeRef<>() {
-                });
+                .getAll(AdminUsersResponse[].class);
 
         softly.assertThat(users).isEmpty();
     }

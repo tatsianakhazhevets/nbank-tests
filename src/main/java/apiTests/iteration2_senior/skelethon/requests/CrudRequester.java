@@ -82,7 +82,7 @@ public class CrudRequester extends HttpRequest implements CrudEndpointInterface,
 
 
     @Override
-    public ValidatableResponse getAll() {
+    public ValidatableResponse getAll(Class<?> clazz) {
         return given()
                 .spec(requestSpecification)
                 .get(endpoint.getUrl())

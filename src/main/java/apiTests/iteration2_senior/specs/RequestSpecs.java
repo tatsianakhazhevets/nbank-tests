@@ -27,7 +27,7 @@ public class RequestSpecs {
                 .setAccept(ContentType.JSON)
                 .addFilters(List.of(new RequestLoggingFilter(),
                         new ResponseLoggingFilter()))
-                .setBaseUri(Config.getProperty("server") + Config.getProperty("apiVersion"));
+                .setBaseUri(Config.getProperty("apiBaseUrl") + Config.getProperty("apiVersion"));
     }
 
     public static RequestSpecification unAuthSpec() {
@@ -42,10 +42,17 @@ public class RequestSpecs {
     }
 
     public static RequestSpecification authUserSpec(String username, String password) {
-        String userToken;
+        return defaultRequestSpec()
+                .addHeader(Header.AUTHORIZATION.getHeader(),
+                        getUserAuthHeader(username, password))
+                .build();
+    }
+
+    public static String getUserAuthHeader(String username, String password) {
+        String userAuthHeader;
 
         if (!authUserTokens.containsKey(username)) {
-            userToken = new CrudRequester(
+            userAuthHeader = new CrudRequester(
                     RequestSpecs.unAuthSpec(),
                     Endpoint.LOGIN_POST,
                     ResponseSpecs.requestReturnsOk())
@@ -56,13 +63,11 @@ public class RequestSpecs {
                     .extract()
                     .header("Authorization");
 
-            authUserTokens.put(username, userToken);
+            authUserTokens.put(username, userAuthHeader);
         } else {
-            userToken = authUserTokens.get(username);
+            userAuthHeader = authUserTokens.get(username);
         }
 
-        return defaultRequestSpec()
-                .addHeader(Header.AUTHORIZATION.getHeader(), userToken)
-                .build();
+        return userAuthHeader;
     }
 }
