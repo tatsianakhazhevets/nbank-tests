@@ -31,8 +31,7 @@ public class AdminStep {
                 RequestSpecs.adminSpec(),
                 Endpoint.ADMIN_USERS_GET,
                 ResponseSpecs.requestReturnsOk())
-                .getAll(new TypeRef<>() {
-                });
+                .getAll(AdminUsersResponse[].class);
 
         for (AdminUsersResponse user : users) {
             try {
@@ -45,5 +44,14 @@ public class AdminStep {
                 System.out.println("Failed to delete user.getId()=" + user.getId());
             }
         }
+    }
+
+
+    public static List<CreateUserResponse> getAllUsers() {
+        return new ValidatedCrudRequester<CreateUserResponse>(
+                RequestSpecs.adminSpec(),
+                Endpoint.ADMIN_USERS_GET,
+                ResponseSpecs.requestReturnsOk())
+                .getAll(CreateUserResponse[].class);
     }
 }

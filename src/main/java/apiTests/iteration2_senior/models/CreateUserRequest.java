@@ -1,5 +1,6 @@
 package apiTests.iteration2_senior.models;
 
+import apiTests.iteration1_senior.configs.Config;
 import apiTests.iteration2_senior.generators.StringGeneratingRule;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,4 +18,11 @@ public class CreateUserRequest extends BaseModel {
     private String password;
     @StringGeneratingRule(regex = "USER")
     private String role;
+
+    public static CreateUserRequest getAdmin() {
+        return CreateUserRequest.builder()
+                .username(Config.getProperty("admin.username"))
+                .password(Config.getProperty("admin.password"))
+                .build();
+    }
 }
