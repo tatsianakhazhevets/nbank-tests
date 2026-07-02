@@ -21,5 +21,4 @@ public class UserDashboard extends BasePage<UserDashboard> {
         createNewAccount.click();
         return this;
     }
-
 }

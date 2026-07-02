@@ -56,8 +56,4 @@ public class ValidatedCrudRequester<T extends BaseModel> extends HttpRequest imp
         T[] array = (T[]) crudRequester.getAll(clazz).extract().as(clazz);
         return Arrays.asList(array);
     }
-
-    //public List<T> getAll(TypeRef<List<T>> typeRef) {
-    //    return getAll().extract().as(typeRef);
-    //}
 }

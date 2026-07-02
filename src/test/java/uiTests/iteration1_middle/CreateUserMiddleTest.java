@@ -15,11 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CreateUserMiddleTest extends BaseUiTest {
     @Test
     public void adminCanCreateUserTest() {
-        //ШАГ 1: Админ залогинился в банке
         CreateUserRequest admin = CreateUserRequest.getAdmin();
         authAsUser(admin);
-
-        //ШАГ 2: Админ создает юзера в банке
         CreateUserRequest newUser = RandomModelGenerator.generate(CreateUserRequest.class);
 
         new AdminPanel()
@@ -30,7 +27,6 @@ public class CreateUserMiddleTest extends BaseUiTest {
                 .findBy(Condition.exactText(newUser.getUsername() + "\nUSER"))
                 .shouldBe(Condition.visible);
 
-        //Шаг 5: Проверка, что юзер создан на API
         CreateUserResponse createUser = AdminStep.getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(newUser.getUsername()))
                 .findFirst().get();
@@ -40,7 +36,6 @@ public class CreateUserMiddleTest extends BaseUiTest {
 
     @Test
     public void adminCannotCreateUserWithInvalidDataTest() {
-        //ШАГ 1: Админ залогинился в банке
         CreateUserRequest admin = CreateUserRequest.getAdmin();
         authAsUser(admin);
 
@@ -50,11 +45,10 @@ public class CreateUserMiddleTest extends BaseUiTest {
         new AdminPanel()
                 .open()
                 .createUser(newUser.getUsername(), newUser.getPassword())
-                        .checkAlertMessageAndAccept(BankAlert.USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS.getMessage())
+                .checkAlertMessageAndAccept(BankAlert.USERNAME_MUST_BE_BETWEEN_3_AND_15_CHARACTERS.getMessage())
                 .getAllUsers().findBy(Condition.exactText(newUser.getUsername() + "\nUSER"))
                 .shouldNotBe(Condition.exist);
 
-        //ШАГ 5: Проверка, что юзер НЕ создан на API
         long usersWithSameUsernameAsNewUser = AdminStep.getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(newUser.getUsername()))
                 .count();

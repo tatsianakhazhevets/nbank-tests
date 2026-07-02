@@ -17,18 +17,10 @@ public class CreateAccountMiddleTest extends BaseUiTest {
 
     @Test
     public void userCanCreateAccountTest() {
-        //ШАГИ ПО НАСТРОЙКЕ ОКРУЖЕНИЯ
-        //ШАГ 1: Админ логинится в банке
-        //ШАГ 2: Админ создает юзера
-        //ШАГ 3: Юзер логинится в банке
-
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);
 
         Selenide.open("/dashboard");
-
-        //ШАГ ТЕСТА
-        //ШАГ 4: Юзер создает аккаунт
 
         new UserDashboard()
                 .open()
@@ -36,12 +28,10 @@ public class CreateAccountMiddleTest extends BaseUiTest {
 
         List<CreateAccountResponse> createdAccounts = new UserSteps(user.getUsername(), user.getPassword())
                 .getAllAccounts();
-
         assertThat(createdAccounts).hasSize(1);
 
         new UserDashboard().checkAlertMessageAndAccept
                 (BankAlert.NEW_ACCOUNT_CREATED.getMessage() + createdAccounts.get(0).getAccountNumber());
-
         assertThat(createdAccounts.get(0).getBalance()).isZero();
     }
 }

@@ -37,5 +37,4 @@ public class BaseUiTest extends BaseTest {
     public void authAsUser(CreateUserRequest createUserRequest) {
         authAsUser(createUserRequest.getUsername(), createUserRequest.getPassword());
     }
-
 }

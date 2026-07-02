@@ -23,7 +23,6 @@ public class LoginUserMiddleTest extends BaseUiTest {
 
     @Test
     public void userCanLoginWithCorrectDataTest() {
-        // create user
         CreateUserRequest user = AdminStep.createUser();
 
         new LoginPage()
