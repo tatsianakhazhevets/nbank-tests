@@ -11,7 +11,7 @@ import java.util.List;
 import static com.codeborne.selenide.Selenide.$;
 
 @Getter
-public class AdminPanel extends BasePage<AdminPanel> {
+public class AdminPanelSenior extends BasePage<AdminPanelSenior> {
     private SelenideElement adminPanelText = $(Selectors.byText("Admin Panel"));
     private SelenideElement addUserButton = $(Selectors.byText("Add User"));
 
@@ -20,14 +20,15 @@ public class AdminPanel extends BasePage<AdminPanel> {
         return "/admin";
     }
 
-    public AdminPanel createUser(String username, String password) {
+    public AdminPanelSenior createUser(String username, String password) {
         usernameInput.sendKeys(username);
         passwordInput.sendKeys(password);
         addUserButton.click();
         return this;
     }
 
-    public ElementsCollection getAllUsers() {
-        return $(Selectors.byText("All Users")).parent().findAll("li");
+    public List<UserBage> getAllUsers() {
+        ElementsCollection elementsCollection = $(Selectors.byText("All Users")).parent().findAll("li");
+        return generatePageElements(elementsCollection, UserBage::new);
     }
 }
