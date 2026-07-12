@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AccountsNestedResponse {
+public class AccountsNestedResponse extends BaseModel{
     private int id;
     private String accountNumber;
     private double balance;
