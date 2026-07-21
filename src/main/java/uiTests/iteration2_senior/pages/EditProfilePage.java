@@ -1,8 +1,9 @@
-package uiTests.iteration2_middle.pages;
+package uiTests.iteration2_senior.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;
+import uiTests.iteration2_senior.pages.BasePage;
 
 import static com.codeborne.selenide.Selenide.$;
 
