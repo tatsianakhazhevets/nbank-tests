@@ -1,11 +1,16 @@
-package uiTests.iteration2_middle.pages;
+package uiTests.iteration2_senior.pages;
 
 import apiTests.iteration2_senior.models.CreateUserRequest;
 import apiTests.iteration2_senior.specs.RequestSpecs;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Alert;
+import uiTests.iteration2_senior.elements.MyBaseElement;
+
+import java.util.List;
+import java.util.function.Function;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,5 +44,11 @@ public abstract class BasePage<T extends BasePage> {
 
     public static void authAsUser(CreateUserRequest createUserRequest) {
         authAsUser(createUserRequest.getUsername(), createUserRequest.getPassword());
+    }
+
+    //ElementCollection -> List<BaseElement>
+    protected <T extends MyBaseElement> List<T> convertPageElement(ElementsCollection elementsCollection,
+                                                                   Function<SelenideElement, T> constructor) {
+        return elementsCollection.stream().map(constructor).toList();
     }
 }
