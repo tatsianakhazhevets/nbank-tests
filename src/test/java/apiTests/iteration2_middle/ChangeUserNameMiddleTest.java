@@ -9,6 +9,7 @@ import apiTests.iteration2_middle.specs.RequestSpecs;
 import apiTests.iteration2_middle.specs.ResponseSpecs;
 import apiTests.iteration2_middle.utils.RandomDataGenerator;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,7 +19,7 @@ import java.util.stream.Stream;
 
 public class ChangeUserNameMiddleTest extends BaseTest {
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCanChangeNameSuccessfully() {
 
         String name = RandomDataGenerator.getName();
@@ -94,7 +95,7 @@ public class ChangeUserNameMiddleTest extends BaseTest {
     }
 
     @MethodSource("changeNameInvalidCases")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void authorizedUserCannotChangeNameWithInvalidData(String name, String errorMessage) {
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()

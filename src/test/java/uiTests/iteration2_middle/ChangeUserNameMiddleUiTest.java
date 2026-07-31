@@ -9,6 +9,7 @@ import apiTests.iteration2_senior.skelethon.requests.ValidatedCrudRequester;
 import apiTests.iteration2_senior.specs.RequestSpecs;
 import apiTests.iteration2_senior.specs.ResponseSpecs;
 import apiTests.iteration2_senior.steps.AdminStep;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import uiTests.iteration2_middle.pages.AlertMessages;
 import uiTests.iteration2_middle.pages.EditProfilePage;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ChangeUserNameMiddleUiTest extends BaseUiTest {
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCanChangeNameSuccessfully() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);
@@ -44,7 +45,7 @@ public class ChangeUserNameMiddleUiTest extends BaseUiTest {
         assertThat(existingUserProfile.getName()).isEqualTo(changeUserNameRequest);
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void changeNameInvalidCases() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);

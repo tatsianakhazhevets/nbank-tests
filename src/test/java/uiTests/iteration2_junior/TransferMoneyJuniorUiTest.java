@@ -14,6 +14,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
 
@@ -45,7 +46,7 @@ public class TransferMoneyJuniorUiTest {
         );
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserTransfersMoneySuccessfully() {
         //PRECONDITIONS
         //Step 1: Admin logs in
@@ -148,7 +149,7 @@ public class TransferMoneyJuniorUiTest {
         assertThat(Double.toString(userTransferOutResponse.getAmount())).isEqualTo(transferMoneyRequest);
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotTransferMoneyWithInvalidAmount() {
         //PRECONDITIONS
         //Step 1: Admin logs in
@@ -234,7 +235,7 @@ public class TransferMoneyJuniorUiTest {
         assertThat(allUserTransactions).noneMatch(t -> TRANSFER_OUT.getType().equals(t.getType()));
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotTransferMoneyWithMissingConfirmation() {
         //PRECONDITIONS
         //Step 1: Admin logs in

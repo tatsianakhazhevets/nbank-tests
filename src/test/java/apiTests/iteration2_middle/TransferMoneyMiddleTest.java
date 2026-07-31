@@ -7,6 +7,7 @@ import apiTests.iteration2_middle.specs.RequestSpecs;
 import apiTests.iteration2_middle.specs.ResponseSpecs;
 import apiTests.iteration2_middle.utils.RandomDataGenerator;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -36,7 +37,7 @@ public class TransferMoneyMiddleTest extends BaseTest {
     }
 
     @MethodSource("validTransfersBetweenOwnAccounts")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userTransfersMoneyBetweenOwnAccountsSuccessfully(double deposit, double transferAmount) {
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
                 .username(RandomDataGenerator.getUsername())
@@ -142,7 +143,7 @@ public class TransferMoneyMiddleTest extends BaseTest {
     }
 
     @MethodSource("invalidTransfersBetweenOwnAccounts")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userCannotTransferInvalidAmountsBetweenAccounts(double deposit, double transferAmount, String errorMessage) {
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
@@ -245,7 +246,7 @@ public class TransferMoneyMiddleTest extends BaseTest {
     }
 
     @MethodSource("validTransferToAnotherUser")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userCanTransferMoneyToAnotherUserSuccessfully(double deposit, double transferAmount) {
 
         CreateUserRequest createFirstUserRequest = CreateUserRequest.builder()
@@ -377,7 +378,7 @@ public class TransferMoneyMiddleTest extends BaseTest {
     }
 
     @MethodSource("invalidTransferToAnotherUser")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userCannotTransferMoneyToAnotherUser(double deposit, double transferAmount, String errorMessage) {
 
         CreateUserRequest createFirstUserRequest = CreateUserRequest.builder()

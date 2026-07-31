@@ -8,6 +8,7 @@ import apiTests.iteration2_senior.models.CreateUserResponse;
 import apiTests.iteration2_senior.specs.RequestSpecs;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
 
@@ -37,7 +38,7 @@ public class CreateUserTest {
         );
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCanCreateUserTest() {
         //ШАГ 1: Админ залогинился в банке
         CreateUserRequest admin = CreateUserRequest.builder()
@@ -88,7 +89,7 @@ public class CreateUserTest {
         ModelAssertions.assertThatModels(newUser, createUser).match();
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCannotCreateUserWithInvalidDataTest() {
         //ШАГ 1: Админ залогинился в банке
         CreateUserRequest admin = CreateUserRequest.builder()

@@ -5,6 +5,7 @@ import apiTests.iteration1_middle.models.CreateUserRequest;
 import apiTests.iteration1_middle.models.LoginUserRequest;
 import apiTests.iteration1_middle.models.UserRole;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import apiTests.iteration1_middle.requests.AdminCreateUserRequester;
 import apiTests.iteration1_middle.requests.LoginUserRequester;
@@ -15,7 +16,7 @@ import static io.restassured.RestAssured.given;
 
 public class LoginUserTestMiddle extends BaseTestMiddle {
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCanGenerateAuthTokenTest() {
         LoginUserRequest userRequest = LoginUserRequest.builder()
                 .username("admin")
@@ -27,7 +28,7 @@ public class LoginUserTestMiddle extends BaseTestMiddle {
                 .post(userRequest);
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void userCanGenerateAuthTokenTest() {
         //создание пользователя
         CreateUserRequest userRequest = CreateUserRequest.builder()

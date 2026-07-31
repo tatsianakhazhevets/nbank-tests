@@ -3,6 +3,7 @@ package apiTests.iteration1_middle;
 import apiTests.iteration1_middle.generators.RandomData;
 import apiTests.iteration1_middle.models.CreateUserRequest;
 import apiTests.iteration1_middle.models.UserRole;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import apiTests.iteration1_middle.requests.AdminCreateUserRequester;
 import apiTests.iteration1_middle.requests.CreateAccountRequester;
@@ -11,7 +12,7 @@ import apiTests.iteration1_middle.specs.ResponseSpecs;
 
 public class CreateAccountTestMiddle {
 
-    @Test
+    @Disabled("learning purpose")
     public void userCanCreateAccountTest() {
 
         CreateUserRequest userRequest = CreateUserRequest.builder()

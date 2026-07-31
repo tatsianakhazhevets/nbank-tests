@@ -7,6 +7,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -30,7 +31,7 @@ public class LoginUserTest {
         );
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCanLoginWithCorrectDataTest() {
         CreateUserRequest admin = CreateUserRequest.builder()
                 .username("admin")
@@ -45,7 +46,7 @@ public class LoginUserTest {
         $(Selectors.byText("Admin Panel")).shouldBe(Condition.visible);
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void userCanLoginWithCorrectDataTest() {
         // create user
         CreateUserRequest user = AdminStep.createUser();

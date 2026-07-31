@@ -5,6 +5,7 @@ import apiTests.iteration2_senior.models.*;
 import apiTests.iteration2_senior.steps.AdminStep;
 import apiTests.iteration2_senior.steps.UserStep;
 import net.datafaker.Faker;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import uiTests.iteration2_middle.models.MatchingTransactionsUI;
 import uiTests.iteration2_middle.pages.*;
@@ -16,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DepositMoneyMiddleUiTest extends BaseUiTest {
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserDepositsMoneySuccessfully() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);
@@ -63,7 +64,7 @@ public class DepositMoneyMiddleUiTest extends BaseUiTest {
     }
 
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositInvalidAmount() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);
@@ -99,7 +100,7 @@ public class DepositMoneyMiddleUiTest extends BaseUiTest {
         assertThat(userDepositResponse).isEqualTo(0);
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositToNonExistingAccount() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);

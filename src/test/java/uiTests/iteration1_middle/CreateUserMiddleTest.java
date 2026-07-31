@@ -6,6 +6,7 @@ import apiTests.iteration2_senior.models.CreateUserRequest;
 import apiTests.iteration2_senior.models.CreateUserResponse;
 import apiTests.iteration2_senior.steps.AdminStep;
 import com.codeborne.selenide.Condition;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import uiTests.iteration1_middle.pages.AdminPanel;
 import uiTests.iteration1_middle.pages.BankAlert;
@@ -13,7 +14,7 @@ import uiTests.iteration1_middle.pages.BankAlert;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CreateUserMiddleTest extends BaseUiTest {
-    @Test
+    @Disabled("learning purpose")
     public void adminCanCreateUserTest() {
         CreateUserRequest admin = CreateUserRequest.getAdmin();
         authAsUser(admin);
@@ -34,7 +35,7 @@ public class CreateUserMiddleTest extends BaseUiTest {
         ModelAssertions.assertThatModels(newUser, createUser).match();
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCannotCreateUserWithInvalidDataTest() {
         CreateUserRequest admin = CreateUserRequest.getAdmin();
         authAsUser(admin);

@@ -3,6 +3,7 @@ package apiTests.iteration2_junior;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -33,7 +34,7 @@ public class DepositMoneyTest extends ConfigClass {
     }
 
     @MethodSource("depositPositiveCases")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void authorizedUserDepositsMoneySuccessfully(String username, String password, String role, double deposit) {
 
         String createUserRequestBody = String.format(
@@ -133,7 +134,7 @@ public class DepositMoneyTest extends ConfigClass {
     }
 
     @MethodSource("depositInvalidCases")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositInvalidAmount(String username, String password, String role, double deposit,
                                                          String errorMessage) {
 
@@ -224,7 +225,7 @@ public class DepositMoneyTest extends ConfigClass {
     }
 
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositToNonExistingAccount() {
 
         // Admin creates a user
@@ -295,7 +296,7 @@ public class DepositMoneyTest extends ConfigClass {
     }
 
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositToAnotherUsersAccount() {
 
         // Admin creates the first user

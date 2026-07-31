@@ -3,6 +3,7 @@ package apiTests.iteration1_junior;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,7 +16,7 @@ import static io.restassured.RestAssured.given;
 
 public class CreateUserTestJunior extends ConfigClassJunior {
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCanCreateUserWithCorrectData() {
         given()
                 .contentType(ContentType.JSON)
@@ -50,7 +51,7 @@ public class CreateUserTestJunior extends ConfigClassJunior {
     }
 
     @MethodSource("userInvalidData")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void adminCanNotCreateUserWithInvalidData(String username, String password, String role, String errorKey, List<String> errorValue) {
         String requestBody = String.format(
                 """

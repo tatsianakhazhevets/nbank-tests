@@ -2,6 +2,7 @@ package apiTests.iteration2_junior;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,7 +16,7 @@ public class ChangeUserNameTest extends ConfigClass {
 
     private static final String ADMIN_AUTH = "Basic YWRtaW46YWRtaW4=";
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCanChangeNameSuccessfully() {
 
         // Admin creates a user
@@ -128,7 +129,7 @@ public class ChangeUserNameTest extends ConfigClass {
     }
 
     @MethodSource("changeNameInvalidCases")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void authorizedUserCannotChangeNameWithInvalidData(String username, String password, String role,
                                                               String name, String errorMessage) {
 

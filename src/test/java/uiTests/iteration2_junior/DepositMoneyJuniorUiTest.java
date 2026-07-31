@@ -10,6 +10,7 @@ import apiTests.iteration2_senior.steps.AdminStep;
 import apiTests.iteration2_senior.steps.UserStep;
 import com.codeborne.selenide.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
 
@@ -37,7 +38,7 @@ public class DepositMoneyJuniorUiTest {
         );
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserDepositsMoneySuccessfully() {
         //PRECONDITIONS
         //Step 1: Admin logs in
@@ -118,7 +119,7 @@ public class DepositMoneyJuniorUiTest {
         assertThat(userDepositResponse.getType()).isEqualTo(DEPOSIT.getType());
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositInvalidAmount() {
         //PRECONDITIONS
         //Step 1: Admin logs in
@@ -185,7 +186,7 @@ public class DepositMoneyJuniorUiTest {
         assertThat(userDepositResponse).isEqualTo(0);
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositToNonExistingAccount() {
         //PRECONDITIONS
         //Step 1: Admin logs in

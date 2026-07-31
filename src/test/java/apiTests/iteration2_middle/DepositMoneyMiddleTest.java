@@ -7,6 +7,7 @@ import apiTests.iteration2_middle.specs.RequestSpecs;
 import apiTests.iteration2_middle.specs.ResponseSpecs;
 import apiTests.iteration2_middle.utils.RandomDataGenerator;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -29,7 +30,7 @@ public class DepositMoneyMiddleTest extends BaseTest {
             0.01,
             // Deposit amount must be positive – test with 0,02 (T6_Positive test)
             0.02})
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void authorizedUserDepositsMoneySuccessfully(double deposit) {
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
@@ -96,7 +97,7 @@ public class DepositMoneyMiddleTest extends BaseTest {
     }
 
     @MethodSource("depositInvalidCases")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositInvalidAmount(double deposit, String errorMessage) {
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
@@ -150,7 +151,7 @@ public class DepositMoneyMiddleTest extends BaseTest {
     }
 
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositToNonExistingAccount() {
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
@@ -194,7 +195,7 @@ public class DepositMoneyMiddleTest extends BaseTest {
     }
 
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotDepositToAnotherUsersAccount() {
 
         CreateUserRequest createFirstUserRequest = CreateUserRequest.builder()

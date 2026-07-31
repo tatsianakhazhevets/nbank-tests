@@ -5,6 +5,7 @@ import apiTests.iteration1_senior.steps.UserSteps;
 import apiTests.iteration2_senior.models.CreateUserRequest;
 import apiTests.iteration2_senior.steps.AdminStep;
 import com.codeborne.selenide.Selenide;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import uiTests.iteration1_middle.pages.BankAlert;
 import uiTests.iteration1_middle.pages.UserDashboard;
@@ -15,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CreateAccountMiddleTest extends BaseUiTest {
 
-    @Test
+    @Disabled("learning purpose")
     public void userCanCreateAccountTest() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);

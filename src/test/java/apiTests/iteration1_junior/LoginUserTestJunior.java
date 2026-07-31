@@ -3,6 +3,7 @@ package apiTests.iteration1_junior;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -10,7 +11,7 @@ import static io.restassured.RestAssured.*;
 
 public class LoginUserTestJunior extends ConfigClassJunior {
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCanGenerateAuthTokenTest() {
 
         // Жесткая связкаЖ: эндрпоинт , JSON запрос + ответ - жесткая связка всегда проектируется с помощью дата классов или енумов
@@ -34,7 +35,7 @@ public class LoginUserTestJunior extends ConfigClassJunior {
     }
 
 
-    @Test
+    @Disabled("learning purpose")
     public void userCanGenerateAuthTokenTest() {
         //создание пользователя
         given()

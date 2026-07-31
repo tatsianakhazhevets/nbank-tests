@@ -6,6 +6,7 @@ import apiTests.iteration2_senior.steps.AdminStep;
 import apiTests.iteration2_senior.steps.DepositStep;
 import apiTests.iteration2_senior.steps.UserStep;
 import net.datafaker.Faker;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import uiTests.iteration2_middle.pages.AlertMessages;
 import uiTests.iteration2_middle.pages.TransferHistoryPage;
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransferMoneyMiddleUiTest extends BaseUiTest {
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserTransfersMoneySuccessfully() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);
@@ -91,7 +92,7 @@ public class TransferMoneyMiddleUiTest extends BaseUiTest {
     }
 
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotTransferMoneyWithInvalidAmount() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);
@@ -143,7 +144,7 @@ public class TransferMoneyMiddleUiTest extends BaseUiTest {
         assertThat(allUserTransactions).noneMatch(t -> TRANSFER_OUT.getType().equals(t.getType()));
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCannotTransferMoneyWithMissingConfirmation() {
         CreateUserRequest user = AdminStep.createUser();
         authAsUser(user);

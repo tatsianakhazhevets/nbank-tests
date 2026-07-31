@@ -3,6 +3,7 @@ package apiTests.iteration2_junior;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -36,7 +37,7 @@ public class TransferMoneyTest extends ConfigClass {
     }
 
     @MethodSource("validTransfersBetweenOwnAccounts")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userTransfersMoneyBetweenOwnAccountsSuccessfully(String username, String password, String role,
                                                                  double deposit, double transferAmount) {
 
@@ -199,7 +200,7 @@ public class TransferMoneyTest extends ConfigClass {
     }
 
     @MethodSource("invalidTransfersBetweenOwnAccounts")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userCannotTransferInvalidAmountsBetweenAccounts(String username, String password, String role,
                                                                 double deposit, double transferAmount, String errorMessage) {
 
@@ -369,7 +370,7 @@ public class TransferMoneyTest extends ConfigClass {
     }
 
     @MethodSource("validTransferToAnotherUser")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userCanTransferMoneyToAnotherUserSuccessfully(String username1, String password1,
                                                               String username2, String password2,
                                                               String role, double deposit, double transferAmount) {
@@ -583,7 +584,7 @@ public class TransferMoneyTest extends ConfigClass {
     }
 
     @MethodSource("invalidTransferToAnotherUser")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void userCannotTransferMoneyToAnotherUser(String username1, String password1, String username2, String password2,
                                                      String role, double deposit, double transferAmount, String errorMessage) {
 

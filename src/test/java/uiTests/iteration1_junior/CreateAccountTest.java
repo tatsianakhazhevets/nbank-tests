@@ -12,6 +12,7 @@ import apiTests.iteration1_senior.specs.ResponseSpecs;
 import apiTests.iteration2_senior.models.CreateUserRequest;
 import apiTests.iteration2_senior.steps.AdminStep;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
 
@@ -40,7 +41,7 @@ public class CreateAccountTest {
         );
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void userCanCreateAccountTest() {
         //ШАГИ ПО НАСТРОЙКЕ ОКРУЖЕНИЯ
         //ШАГ 1: Админ логинится в банке

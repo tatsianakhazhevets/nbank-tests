@@ -4,6 +4,7 @@ import apiTests.iteration1_middle.generators.RandomData;
 import apiTests.iteration1_middle.models.CreateUserRequest;
 import apiTests.iteration1_middle.models.CreateUserResponse;
 import apiTests.iteration1_middle.models.UserRole;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
 
 public class CreateUserTestMiddle extends BaseTestMiddle {
 
-    @Test
+    @Disabled("learning purpose")
     public void adminCanCreateUserWithCorrectData() {
 
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
@@ -48,7 +49,7 @@ public class CreateUserTestMiddle extends BaseTestMiddle {
     }
 
     @MethodSource("userInvalidData")
-    @ParameterizedTest
+    @Disabled("learning purpose")
     public void adminCanNotCreateUserWithInvalidData(String username, String password, String role, String errorKey, List<String> errorValue) {
         CreateUserRequest createUserRequest = CreateUserRequest.builder()
                 .username(username)

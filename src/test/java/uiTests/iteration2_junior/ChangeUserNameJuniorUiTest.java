@@ -9,6 +9,7 @@ import apiTests.iteration2_senior.specs.ResponseSpecs;
 import apiTests.iteration2_senior.steps.AdminStep;
 import com.codeborne.selenide.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
 
@@ -34,7 +35,7 @@ public class ChangeUserNameJuniorUiTest {
         );
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void authorizedUserCanChangeNameSuccessfully() {
         //PRECONDITIONS
         //Step 1: Admin logs in
@@ -94,7 +95,7 @@ public class ChangeUserNameJuniorUiTest {
         assertThat(existingUserProfile.getName()).isEqualTo(changeUserNameRequest);
     }
 
-    @Test
+    @Disabled("learning purpose")
     public void changeNameInvalidCases() {
         //PRECONDITIONS
         //Step 1: Admin logs in
