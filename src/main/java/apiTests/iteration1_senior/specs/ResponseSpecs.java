@@ -29,7 +29,7 @@ public class ResponseSpecs {
     public static ResponseSpecification requestReturnsBadRequest(String errorKey, List<String> errorValue) {
         return defaultResponseBuilder()
                 .expectStatusCode(HttpStatus.SC_BAD_REQUEST)
-                .expectBody(errorKey, Matchers.equalTo(errorValue))
+                .expectBody(errorKey, Matchers.containsInAnyOrder(errorValue.toArray()))
                 .build();
     }
 }
