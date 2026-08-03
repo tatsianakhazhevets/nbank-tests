@@ -37,7 +37,7 @@ public class CreateUserTestSenior extends BaseTestSenior {
     public static Stream<Arguments> userInvalidData() {
         return Stream.of(
                 //username field validation
-                Arguments.of("", "Password33$", "USER", "username", List.of("Username cannot be blank",
+                Arguments.of(" ", "Password33$", "USER", "username", List.of("Username cannot be blank",
                         "Username must contain only letters, digits, dashes, underscores, and dots", "Username must be between 3 and 15 characters")),
                 Arguments.of("ab", "Password33$", "USER", "username", List.of("Username must be between 3 and 15 characters")),
                 Arguments.of("abd%", "Password33$", "USER", "username", List.of("Username must contain only letters, digits, dashes, underscores, and dots")),

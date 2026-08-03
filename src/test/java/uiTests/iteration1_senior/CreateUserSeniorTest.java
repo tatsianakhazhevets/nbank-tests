@@ -7,6 +7,7 @@ import apiTests.iteration2_senior.models.CreateUserResponse;
 import apiTests.iteration2_senior.steps.AdminStep;
 import common.annotations.AdminSession;
 import org.junit.jupiter.api.Test;
+import uiTests.iteration1_middle.elements.UserBage;
 import uiTests.iteration1_middle.pages.AdminPanelSenior;
 import uiTests.iteration1_middle.pages.BankAlert;
 
@@ -20,13 +21,14 @@ public class CreateUserSeniorTest extends BaseUiTest {
     public void adminCanCreateUserTest() {
         CreateUserRequest newUser = RandomModelGenerator.generate(CreateUserRequest.class);
 
-        assertTrue(new AdminPanelSenior()
+        UserBage newUserBage = new AdminPanelSenior()
                 .open()
                 .createUser(newUser.getUsername(), newUser.getPassword())
                 .checkAlertMessageAndAccept(BankAlert.USER_CREATED_SUCCESSFULLY.getMessage())
-                .getAllUsers()
-                .stream()
-                .anyMatch(userBage -> userBage.getUsername().equals(newUser.getUsername())));
+                .findUserByUserName(newUser.getUsername());
+
+        assertThat(newUserBage)
+                .as("UserBage should exist on Dashboard after user creation").isNotNull();
 
         CreateUserResponse createUser = AdminStep.getAllUsers().stream()
                 .filter(user -> user.getUsername().equals(newUser.getUsername()))
