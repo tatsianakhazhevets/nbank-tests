@@ -40,7 +40,6 @@ public class TransferMoneySeniorTest extends BaseTest {
     @ParameterizedTest
     public void userTransfersMoneyBetweenOwnAccountsSuccessfully(double deposit, double transferAmount) {
         CreateUserRequest user = AdminStep.createUser();
-        UserStep.login(user);
         CreateUserAccountResponse firstAccountId = UserStep.createUserAccount(user);
         repeat(2, () -> DepositStep.depositMoney(user, firstAccountId, deposit));
         CreateUserAccountResponse secondAccountId = UserStep.createUserAccount(user);
@@ -84,9 +83,8 @@ public class TransferMoneySeniorTest extends BaseTest {
     public void userCannotTransferInvalidAmountsBetweenAccounts(double deposit, double transferAmount, String errorMessage) {
 
         CreateUserRequest user = AdminStep.createUser();
-        UserStep.login(user);
         CreateUserAccountResponse firstAccountId = UserStep.createUserAccount(user);
-        repeat(2, () -> DepositStep.depositMoney(user, firstAccountId, deposit));
+        repeat(3, () -> DepositStep.depositMoney(user, firstAccountId, deposit));
         CreateUserAccountResponse secondAccountId = UserStep.createUserAccount(user);
 
         TransferMoneyRequest transferMoneyRequest = TransferMoneyRequest.builder()
@@ -125,11 +123,9 @@ public class TransferMoneySeniorTest extends BaseTest {
     public void userCanTransferMoneyToAnotherUserSuccessfully(double deposit, double transferAmount) {
 
         CreateUserRequest firstUser = AdminStep.createUser();
-        UserStep.login(firstUser);
         CreateUserAccountResponse firstUserAccountId = UserStep.createUserAccount(firstUser);
         repeat(2, () -> DepositStep.depositMoney(firstUser, firstUserAccountId, deposit));
         CreateUserRequest secondUser = AdminStep.createUser();
-        UserStep.login(secondUser);
         CreateUserAccountResponse secondUserAccountId = UserStep.createUserAccount(secondUser);
 
         TransferMoneyRequest transferMoneyRequest = TransferMoneyRequest.builder()
@@ -139,11 +135,10 @@ public class TransferMoneySeniorTest extends BaseTest {
                 .build();
 
         TransferMoneyResponse transferMoneyResponse = new ValidatedCrudRequester<TransferMoneyResponse>(
-                RequestSpecs.authUserSpec(firstUser.getUsername(), secondUser.getPassword()),
+                RequestSpecs.authUserSpec(firstUser.getUsername(), firstUser.getPassword()),
                 Endpoint.TRANSFER_POST,
                 ResponseSpecs.requestReturnsOk())
                 .post(transferMoneyRequest);
-
 
         List<UserAccountsResponse> firstUserAccounts = AccountCheckStep.getUserAccount(firstUser);
         List<UserAccountsResponse> secondUserAccounts = AccountCheckStep.getUserAccount(secondUser);
@@ -174,11 +169,9 @@ public class TransferMoneySeniorTest extends BaseTest {
     public void userCannotTransferMoneyToAnotherUser(double deposit, double transferAmount, String errorMessage) {
 
         CreateUserRequest firstUser = AdminStep.createUser();
-        UserStep.login(firstUser);
         CreateUserAccountResponse firstUserAccountId = UserStep.createUserAccount(firstUser);
-        repeat(2, () -> DepositStep.depositMoney(firstUser, firstUserAccountId, deposit));
+        repeat(3, () -> DepositStep.depositMoney(firstUser, firstUserAccountId, deposit));
         CreateUserRequest secondUser = AdminStep.createUser();
-        UserStep.login(secondUser);
         CreateUserAccountResponse secondUserAccountId = UserStep.createUserAccount(secondUser);
 
         TransferMoneyRequest transferMoneyRequest = TransferMoneyRequest.builder()

@@ -3,6 +3,7 @@ package uiTests.iteration2_senior.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.SelenideElement;
+import common_iteration2.utils.MyRetryUtils;
 import uiTests.iteration2_senior.pages.BasePage;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -19,9 +20,12 @@ public class EditProfilePage extends BasePage<EditProfilePage> {
     }
 
     public EditProfilePage changeUserName(String userName) {
-        //Without the second input, the test doesn't work, I assume it's a bug:
         enterNewNameField.setValue(userName);
-        enterNewNameField.setValue(userName).shouldHave(Condition.value(userName));
+        enterNewNameField
+                .shouldBe(Condition.visible)
+                .setValue(userName)
+                .shouldHave(Condition.value(userName));
+
         saveChangesButton.click();
         return this;
     }
