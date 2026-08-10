@@ -28,7 +28,6 @@ public class ChangeUserNameSeniorTest extends BaseTest {
     @Test
     public void authorizedUserCanChangeNameSuccessfully() {
         CreateUserRequest user = AdminStep.createUser();
-        UserStep.login(user);
         ChangeUserNameRequest changeUserNameRequest = RandomModelGenerator.generate(ChangeUserNameRequest.class);
 
         // Authorized user can change their name (T29_Positive test)
@@ -47,7 +46,6 @@ public class ChangeUserNameSeniorTest extends BaseTest {
         AssertingClass.assertThat(changeUserNameRequest, changeUserNameResponse).match();
         softly.assertThat(changedUserName.getName()).isEqualTo(changeUserNameRequest.getName());
         softly.assertThat(changeUserNameResponse.getMessage()).isEqualTo(PROFILE_UPDATED_SUCCESSFULLY.getMessage());
-
 
         // Authorized third user can change their name on the same name(T33_Positive test)
         ChangeUserNameResponse changeUserNameSecondResponse = new ValidatedCrudRequester<ChangeUserNameResponse>(
@@ -84,8 +82,6 @@ public class ChangeUserNameSeniorTest extends BaseTest {
     @ParameterizedTest
     public void authorizedUserCannotChangeNameWithInvalidData(String name, String errorMessage) {
         CreateUserRequest user = AdminStep.createUser();
-        UserStep.login(user);
-
         ChangeUserNameRequest changeUserNameRequest = ChangeUserNameRequest.builder()
                 .name(name)
                 .build();

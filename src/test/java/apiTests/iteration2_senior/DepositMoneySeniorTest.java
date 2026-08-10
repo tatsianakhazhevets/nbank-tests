@@ -33,7 +33,6 @@ public class DepositMoneySeniorTest extends BaseTest {
     @ParameterizedTest
     public void authorizedUserDepositsMoneySuccessfully(double deposit) {
         CreateUserRequest user = AdminStep.createUser();
-        UserStep.login(user);
         CreateUserAccountResponse accountId = UserStep.createUserAccount(user);
 
         DepositMoneyRequest depositMoneyRequest = DepositMoneyRequest.builder()
@@ -67,7 +66,6 @@ public class DepositMoneySeniorTest extends BaseTest {
     @ParameterizedTest
     public void authorizedUserCannotDepositInvalidAmount(double deposit, String errorMessage) {
         CreateUserRequest user = AdminStep.createUser();
-        UserStep.login(user);
         CreateUserAccountResponse accountId = UserStep.createUserAccount(user);
 
         DepositMoneyRequest depositMoneyRequest = DepositMoneyRequest.builder()
@@ -92,8 +90,6 @@ public class DepositMoneySeniorTest extends BaseTest {
     @Test
     public void authorizedUserCannotDepositToNonExistingAccount() {
         CreateUserRequest user = AdminStep.createUser();
-        UserStep.login(user);
-
         DepositMoneyRequest depositMoneyRequest = RandomModelGenerator.generate(DepositMoneyRequest.class);
 
         new CrudRequester(RequestSpecs.authUserSpec(user.getUsername(), user.getPassword()),
@@ -111,9 +107,7 @@ public class DepositMoneySeniorTest extends BaseTest {
     @Test
     public void authorizedUserCannotDepositToAnotherUsersAccount() {
         CreateUserRequest firstUser = AdminStep.createUser();
-        UserStep.login(firstUser);
         CreateUserRequest secondUser = AdminStep.createUser();
-        UserStep.login(secondUser);
         CreateUserAccountResponse secondUserAccountId = UserStep.createUserAccount(secondUser);
 
         DepositMoneyRequest depositMoneyRequest = RandomModelGenerator

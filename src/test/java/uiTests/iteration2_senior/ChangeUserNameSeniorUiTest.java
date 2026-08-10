@@ -53,7 +53,7 @@ public class ChangeUserNameSeniorUiTest extends BaseUiSeniorTest {
         //1. Test data
         CreateUserRequest user = MySessionStorage.getUserFromStorage();
         String changeUserNameRequest = RandomModelGenerator.generate(ChangeUserNameRequest.class).getName()
-                .replaceAll("\\s+", "");
+                .split(" ")[0];
 
         //2. Test steps
         new UserDashboard()

@@ -6,10 +6,12 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import common_iteration2.utils.MyRetryUtils;
 import org.openqa.selenium.Alert;
 import uiTests.iteration2_senior.elements.MyBaseElement;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -30,7 +32,16 @@ public abstract class BasePage<T extends BasePage> {
     }
 
     public T checkAlertMessageAndAccept(String alertMessages) {
-        Alert alert = switchTo().alert();
+        Alert alert = Wait().until(
+                webDriver -> {
+                    try{
+                        return webDriver.switchTo().alert();
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+        );
+
         assertThat(alert.getText()).isEqualTo(alertMessages);
         alert.accept();
         return (T) this;

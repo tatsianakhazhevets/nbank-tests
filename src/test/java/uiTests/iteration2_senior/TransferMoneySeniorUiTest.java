@@ -36,16 +36,16 @@ public class TransferMoneySeniorUiTest extends BaseUiSeniorTest {
         double deposit = 5000;
         repeat(2, () -> DepositStep.depositMoney(user, firstUserAccount, deposit));
         String secondAccountNumber = AccountStorage.getUserAccountNumber(1, 2).getAccountNumber();
-        String transferMoneyRequest = Double.toString(RandomModelGenerator.generate(TransferMoneyRequest.class)
-                .getAmount());
+        double amount = RandomModelGenerator.generate(TransferMoneyRequest.class).getAmount();
+        String transferMoneyRequest = Double.toString(amount);
+        String transferMoneyRequestUiExpected =  String.format("%.2f", amount).replace(",", ".");
 
         //2. Test steps
         List<TransactionType> transactions = new UserDashboard()
                 .open()
                 .chooseTransferButton()
                 .getPage(TransferPage.class)
-                .chooseAnAccountOption()
-                .chooseAccountNumberOption(firstAccountNumber)
+                .chooseAccount(firstAccountNumber)
                 .enterRecipientName(firstAccountNumber)
                 .enterRecipientAccountNumber(secondAccountNumber)
                 .enterAmount(transferMoneyRequest)
@@ -68,9 +68,9 @@ public class TransferMoneySeniorUiTest extends BaseUiSeniorTest {
 
         //3. Test Results
         assertThat(transactions).anyMatch(t -> t.getType().equals(TRANSFER_IN.getType())
-                && t.getAmount().equals(transferMoneyRequest));
+                && t.getAmount().equals(transferMoneyRequestUiExpected));
         assertThat(transactions).anyMatch(t -> t.getType().equals(TRANSFER_OUT.getType())
-                && t.getAmount().equals(transferMoneyRequest));
+                && t.getAmount().equals(transferMoneyRequestUiExpected));
 
         List<AccountsNestedResponse> existingUserAccounts = new UserStep(user.getUsername(), user.getPassword())
                 .getAllAccounts();
@@ -120,8 +120,7 @@ public class TransferMoneySeniorUiTest extends BaseUiSeniorTest {
                 .open()
                 .chooseTransferButton()
                 .getPage(TransferPage.class)
-                .chooseAnAccountOption()
-                .chooseAccountNumberOption(firstAccountNumber)
+                .chooseAccount(firstAccountNumber)
                 .enterRecipientName(firstAccountNumber)
                 .enterRecipientAccountNumber(secondAccountNumber)
                 .enterAmount(transferMoneyRequest)
@@ -169,16 +168,16 @@ public class TransferMoneySeniorUiTest extends BaseUiSeniorTest {
         int deposit = 5000;
         repeat(2, () -> DepositStep.depositMoney(user, firstUserAccount, deposit));
         String secondAccountNumber = AccountStorage.getUserAccountNumber(1, 2).getAccountNumber();
-        String transferMoneyRequest = Double.toString(RandomModelGenerator.generate(TransferMoneyRequest.class)
-                .getAmount());
+        double amount = RandomModelGenerator.generate(TransferMoneyRequest.class).getAmount();
+        String transferMoneyRequest = Double.toString(amount);
+        String transferMoneyRequestUiExpected =  String.format("%.2f", amount).replace(",", ".");
 
         //2. Test steps
         List<TransactionType> transactions = new UserDashboard()
                 .open()
                 .chooseTransferButton()
                 .getPage(TransferPage.class)
-                .chooseAnAccountOption()
-                .chooseAccountNumberOption(firstAccountNumber)
+                .chooseAccount(firstAccountNumber)
                 .enterRecipientName(firstAccountNumber)
                 .enterRecipientAccountNumber(secondAccountNumber)
                 .enterAmount(transferMoneyRequest)
@@ -197,9 +196,9 @@ public class TransferMoneySeniorUiTest extends BaseUiSeniorTest {
 
         //3. Test Results
         assertThat(transactions).noneMatch(t -> t.getType().equals(TRANSFER_IN.getType())
-                && t.getAmount().equals(transferMoneyRequest));
+                && t.getAmount().equals(transferMoneyRequestUiExpected));
         assertThat(transactions).noneMatch(t -> t.getType().equals(TRANSFER_IN.getType())
-                && t.getAmount().equals(transferMoneyRequest));
+                && t.getAmount().equals(transferMoneyRequestUiExpected));
 
         List<AccountsNestedResponse> existingUserAccounts = new UserStep(user.getUsername(), user.getPassword())
                 .getAllAccounts();

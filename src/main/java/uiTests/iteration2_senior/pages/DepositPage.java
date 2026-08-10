@@ -1,6 +1,7 @@
 package uiTests.iteration2_senior.pages;
 
 import com.codeborne.selenide.*;
+import common_iteration2.utils.MyRetryUtils;
 import uiTests.iteration2_senior.pages.BasePage;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -8,29 +9,32 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class DepositPage extends BasePage<DepositPage> {
 
-    private SelenideElement chooseAnAccountOption = $(Selectors.byText("-- Choose an account --"));
     private SelenideElement enterAmountField = $(Selectors.byAttribute("placeholder", "Enter amount"));
     private SelenideElement depositButton = $(Selectors.byText("💵 Deposit"));
     private SelenideElement depositPage = $(Selectors.byText("\uD83D\uDCB0 Deposit Money"));
     private ElementsCollection chosenOption = $$("option");
+    private SelenideElement accountOption = $(".account-selector");
 
     @Override
     public String url() {
         return "/deposit";
     }
 
-    public DepositPage chooseAnAccountOption() {
-        chooseAnAccountOption.click();
+    public DepositPage chooseAccount(String accountNumber) {
+        MyRetryUtils.retry(
+                () -> {
+                    accountOption.selectOptionContainingText(accountNumber);
+                    return accountOption.getSelectedOptionText();
+                },
+                selectedText -> selectedText != null && selectedText.contains(accountNumber),
+                3,
+                10000
+        );
         return this;
     }
 
     public DepositPage chooseAnAccountOptionWithoutCreatedAccount() {
         chosenOption.shouldHave(CollectionCondition.size(1));
-        return this;
-    }
-
-    public DepositPage chooseAnAccountNumberOption(String accountNumber) {
-        $(Selectors.byText(accountNumber)).click();
         return this;
     }
 
