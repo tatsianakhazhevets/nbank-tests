@@ -5,6 +5,7 @@ import apiTests.iteration1_senior.steps.UserSteps;
 import apiTests.iteration2_senior.models.CreateUserRequest;
 import apiTests.iteration2_senior.steps.AdminStep;
 import com.codeborne.selenide.Selenide;
+import common.annotations.APIVersion;
 import common.annotations.UserSession;
 import common.storage.SessionStorage;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@APIVersion("with_validation_fix")
 public class CreateAccountSeniorTest extends BaseUiTest {
     @Test
     @UserSession

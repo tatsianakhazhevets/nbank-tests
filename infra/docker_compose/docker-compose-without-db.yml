@@ -1,0 +1,5 @@
+services:
+  backend:
+    image: nobugsme/nbank:${BACKEND_VERSION}
+    ports:
+      - "4111:4111"

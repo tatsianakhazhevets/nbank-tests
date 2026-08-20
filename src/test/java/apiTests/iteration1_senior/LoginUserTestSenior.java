@@ -9,9 +9,11 @@ import apiTests.iteration1_senior.skelethon.requesters.ValidatedCrudRequester;
 import apiTests.iteration1_senior.specs.RequestSpecs;
 import apiTests.iteration1_senior.specs.ResponseSpecs;
 import apiTests.iteration1_senior.steps.AdminSteps;
+import common.annotations.APIVersion;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
+@APIVersion("with_validation_fix")
 public class LoginUserTestSenior {
     @Test
     public void adminCanGenerateAuthTokenTest() {

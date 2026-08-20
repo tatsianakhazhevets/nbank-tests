@@ -13,6 +13,7 @@ import apiTests.iteration2_senior.specs.RequestSpecs;
 import apiTests.iteration2_senior.specs.ResponseSpecs;
 import apiTests.iteration2_senior.steps.AdminStep;
 import apiTests.iteration2_senior.steps.UserStep;
+import common.annotations.APIVersion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
 import static apiTests.iteration2_senior.specs.Messages.NAME_MUST_CONTAINS_TWO_WORDS;
 import static apiTests.iteration2_senior.specs.Messages.PROFILE_UPDATED_SUCCESSFULLY;
 
+@APIVersion("with_validation_fix")
 public class ChangeUserNameSeniorTest extends BaseTest {
 
     @Test

@@ -4,6 +4,7 @@ import apiTests.iteration2_senior.generators.RandomModelGenerator;
 import apiTests.iteration2_senior.models.*;
 import apiTests.iteration2_senior.steps.DepositStep;
 import apiTests.iteration2_senior.steps.UserStep;
+import common.annotations.APIVersion;
 import common_iteration2.annotations.MyUserSession;
 import common_iteration2.annotations.UserAccount;
 import common_iteration2.storage.AccountStorage;
@@ -23,6 +24,7 @@ import static apiTests.iteration2_senior.models.TransactionType.TRANSFER_OUT;
 import static apiTests.iteration2_senior.utils.RepeatUtil.repeat;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@APIVersion("with_validation_fix")
 public class TransferMoneySeniorUiTest extends BaseUiSeniorTest {
 
     @Test

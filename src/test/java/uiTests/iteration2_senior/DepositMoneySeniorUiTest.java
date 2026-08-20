@@ -3,6 +3,7 @@ package uiTests.iteration2_senior;
 import apiTests.iteration2_senior.generators.RandomModelGenerator;
 import apiTests.iteration2_senior.models.*;
 import apiTests.iteration2_senior.steps.UserStep;
+import common.annotations.APIVersion;
 import common_iteration2.annotations.UserAccount;
 import common_iteration2.annotations.MyUserSession;
 import common_iteration2.storage.AccountStorage;
@@ -17,6 +18,7 @@ import java.util.List;
 import static apiTests.iteration2_senior.models.TransactionType.DEPOSIT;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@APIVersion("with_validation_fix")
 public class DepositMoneySeniorUiTest extends BaseUiSeniorTest{
 
     @Test

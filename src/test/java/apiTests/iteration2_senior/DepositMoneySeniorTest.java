@@ -11,6 +11,7 @@ import apiTests.iteration2_senior.specs.ResponseSpecs;
 import apiTests.iteration2_senior.steps.AccountCheckStep;
 import apiTests.iteration2_senior.steps.AdminStep;
 import apiTests.iteration2_senior.steps.UserStep;
+import common.annotations.APIVersion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import static apiTests.iteration2_senior.specs.Messages.*;
 
+@APIVersion("with_validation_fix")
 public class DepositMoneySeniorTest extends BaseTest {
 
     @ValueSource(doubles = {

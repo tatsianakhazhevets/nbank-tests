@@ -5,6 +5,7 @@ import apiTests.iteration2_senior.generators.RandomModelGenerator;
 import apiTests.iteration2_senior.models.CreateUserRequest;
 import apiTests.iteration2_senior.models.CreateUserResponse;
 import apiTests.iteration2_senior.steps.AdminStep;
+import common.annotations.APIVersion;
 import common.annotations.AdminSession;
 import org.junit.jupiter.api.Test;
 import uiTests.iteration1_middle.elements.UserBage;
@@ -14,6 +15,7 @@ import uiTests.iteration1_middle.pages.BankAlert;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@APIVersion("with_validation_fix")
 public class CreateUserSeniorTest extends BaseUiTest {
 
     @Test
