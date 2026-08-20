@@ -8,6 +8,7 @@ import apiTests.iteration2_senior.skelethon.endpoints.Endpoint;
 import apiTests.iteration2_senior.skelethon.requests.ValidatedCrudRequester;
 import apiTests.iteration2_senior.specs.RequestSpecs;
 import apiTests.iteration2_senior.specs.ResponseSpecs;
+import common.annotations.APIVersion;
 import common_iteration2.annotations.MyUserSession;
 import common_iteration2.storage.MySessionStorage;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import uiTests.iteration2_senior.pages.UserDashboard;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@APIVersion("with_validation_fix")
 public class ChangeUserNameSeniorUiTest extends BaseUiSeniorTest {
     @Test
     @MyUserSession

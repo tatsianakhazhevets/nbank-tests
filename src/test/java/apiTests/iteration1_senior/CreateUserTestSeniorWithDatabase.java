@@ -1,6 +1,7 @@
 package apiTests.iteration1_senior;
 
-
+import apiTests.iteration1_senior.dao.UserDao;
+import apiTests.iteration1_senior.dao.comparison.DaoAndModelAssertions;
 import apiTests.iteration1_senior.generators.RandomModelGenerator;
 import apiTests.iteration1_senior.models.CreateUserRequest;
 import apiTests.iteration1_senior.models.CreateUserResponse;
@@ -10,6 +11,7 @@ import apiTests.iteration1_senior.skelethon.requesters.CrudRequester;
 import apiTests.iteration1_senior.skelethon.requesters.ValidatedCrudRequester;
 import apiTests.iteration1_senior.specs.RequestSpecs;
 import apiTests.iteration1_senior.specs.ResponseSpecs;
+import apiTests.iteration1_senior.steps.DataBaseSteps;
 import common.annotations.APIVersion;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,20 +21,30 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-@APIVersion("with_validation_fix")
-public class CreateUserTestSenior extends BaseTestSenior {
+import static org.junit.Assert.assertNull;
+
+@APIVersion("with_database_with_fix")
+public class CreateUserTestSeniorWithDatabase extends BaseTestSenior {
     @Test
     public void adminCanCreateUserWithCorrectData() {
+        //Подготовка данных
         CreateUserRequest createUserRequest =
                 RandomModelGenerator.generate(CreateUserRequest.class);
 
+        //POST запрос
         CreateUserResponse createUserResponse = new ValidatedCrudRequester<CreateUserResponse>
                 (RequestSpecs.adminSpec(),
                         Endpoint.ADMIN_USER,
                         ResponseSpecs.entityWasCreated())
                 .post(createUserRequest);
 
+        //GET запрос для проверки созданного юзера
+
         ModelAssertions.assertThatModels(createUserRequest, createUserResponse).match();
+
+        //Проверка через базу данных
+        UserDao userDao = DataBaseSteps.getUserByUsername(createUserRequest.getUsername());
+        DaoAndModelAssertions.assertThat(createUserResponse, userDao).match();
     }
 
     public static Stream<Arguments> userInvalidData() {
@@ -59,5 +71,7 @@ public class CreateUserTestSenior extends BaseTestSenior {
                 Endpoint.ADMIN_USER,
                 ResponseSpecs.requestReturnsBadRequest(errorKey, errorValue))
                 .post(createUserRequest);
+
+        assertNull(DataBaseSteps.getUserByUsername(createUserRequest.getUsername()));
     }
 }

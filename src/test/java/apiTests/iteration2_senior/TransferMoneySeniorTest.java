@@ -11,6 +11,7 @@ import apiTests.iteration2_senior.steps.AccountCheckStep;
 import apiTests.iteration2_senior.steps.AdminStep;
 import apiTests.iteration2_senior.steps.DepositStep;
 import apiTests.iteration2_senior.steps.UserStep;
+import common.annotations.APIVersion;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 import static apiTests.iteration2_senior.utils.RepeatUtil.repeat;
 import static apiTests.iteration2_senior.specs.Messages.*;
 
-
+@APIVersion("with_validation_fix")
 public class TransferMoneySeniorTest extends BaseTest {
 
     public static Stream<Arguments> validTransfersBetweenOwnAccounts() {
