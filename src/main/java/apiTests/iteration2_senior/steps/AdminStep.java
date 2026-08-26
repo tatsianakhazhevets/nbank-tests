@@ -1,6 +1,5 @@
 package apiTests.iteration2_senior.steps;
 
-import io.restassured.common.mapper.TypeRef;
 import apiTests.iteration2_senior.generators.RandomModelGenerator;
 import apiTests.iteration2_senior.models.AdminUsersResponse;
 import apiTests.iteration2_senior.models.CreateUserRequest;
@@ -34,18 +33,29 @@ public class AdminStep {
                 .getAll(AdminUsersResponse[].class);
 
         for (AdminUsersResponse user : users) {
-            try {
-                new CrudRequester(
-                        RequestSpecs.adminSpec(),
-                        Endpoint.ADMIN_USERS_DELETE,
-                        ResponseSpecs.requestReturnsOk())
-                        .delete(user.getId());
-            } catch (Exception e) {
-                System.out.println("Failed to delete user.getId()=" + user.getId());
+            if (!"ADMIN".equals(user.getRole())) {
+                try {
+                    new CrudRequester(
+                            RequestSpecs.adminSpec(),
+                            Endpoint.ADMIN_USERS_DELETE,
+                            ResponseSpecs.requestReturnsOk())
+                            .delete(user.getId());
+                } catch (Exception e) {
+                    System.out.println(
+                            "Failed to delete user.getId()=" + user.getId()
+                    );
+                }
             }
         }
     }
 
+    public static void deleteUser(int userId) {
+        new CrudRequester(
+                RequestSpecs.adminSpec(),
+                Endpoint.ADMIN_USERS_DELETE,
+                ResponseSpecs.requestReturnsOk())
+                .delete(userId);
+    }
 
     public static List<CreateUserResponse> getAllUsers() {
         return new ValidatedCrudRequester<CreateUserResponse>(
