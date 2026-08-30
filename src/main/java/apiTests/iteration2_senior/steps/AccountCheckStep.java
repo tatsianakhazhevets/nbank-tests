@@ -41,4 +41,11 @@ public class AccountCheckStep {
                 .findFirst()
                 .orElseThrow();
     }
+
+    public static TransactionNestedResponse getTransferDeposit(UserAccountsResponse retrieveAccount) {
+        return retrieveAccount.getTransactions().stream()
+                .filter(t -> TransactionType.DEPOSIT.getType().equals(t.getType()))
+                .findFirst()
+                .orElseThrow();
+    }
 }
