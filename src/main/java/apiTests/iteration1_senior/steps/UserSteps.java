@@ -21,7 +21,7 @@ public class UserSteps {
         return new ValidatedCrudRequester<CreateAccountResponse>(
                 RequestSpecs.authAsUser(username, password),
                 Endpoint.CUSTOMER_ACCOUNTS,
-                ResponseSpecs.requestReturnOK())
+                ResponseSpecs.requestReturnsOK())
                 .getAll(CreateAccountResponse[].class);
     }
 }

@@ -24,7 +24,7 @@ public class LoginUserTestSenior {
 
         new ValidatedCrudRequester<CreateUserResponse>(RequestSpecs.unauthSpec(),
                 Endpoint.LOGIN,
-                ResponseSpecs.requestReturnOK())
+                ResponseSpecs.requestReturnsOK())
                 .post(userRequest);
     }
 
@@ -34,7 +34,7 @@ public class LoginUserTestSenior {
 
         new CrudRequester(RequestSpecs.unauthSpec(),
                 Endpoint.LOGIN,
-                ResponseSpecs.requestReturnOK())
+                ResponseSpecs.requestReturnsOK())
                 .post(LoginUserRequest.builder().username(userRequest.getUsername()).password(userRequest.getPassword()).build())
                 .header("Authorization", Matchers.notNullValue());
     }

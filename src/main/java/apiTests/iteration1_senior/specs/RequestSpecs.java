@@ -48,7 +48,7 @@ public class RequestSpecs {
             userAuthHeader = new CrudRequester(
                     RequestSpecs.unauthSpec(),
                     Endpoint.LOGIN,
-                    ResponseSpecs.requestReturnOK())
+                    ResponseSpecs.requestReturnsOK())
                     .post(LoginUserRequest.builder().username(username).password(password).build())
                     .extract()
                     .header("Authorization");
