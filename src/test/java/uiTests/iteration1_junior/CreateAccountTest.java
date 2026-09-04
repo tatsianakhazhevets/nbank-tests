@@ -53,7 +53,7 @@ public class CreateAccountTest {
         String userAuthHeader = new CrudRequester(
                 RequestSpecs.unauthSpec(),
                 Endpoint.LOGIN,
-                ResponseSpecs.requestReturnOK())
+                ResponseSpecs.requestReturnsOK())
                 .post(LoginUserRequest.builder().username(user.getUsername()).password(user.getPassword()).build())
                 .extract()
                 .header("Authorization");

@@ -20,7 +20,7 @@ public class ResponseSpecs {
                 .build();
     }
 
-    public static ResponseSpecification requestReturnOK() {
+    public static ResponseSpecification requestReturnsOK() {
         return defaultResponseBuilder()
                 .expectStatusCode(HttpStatus.SC_OK)
                 .build();

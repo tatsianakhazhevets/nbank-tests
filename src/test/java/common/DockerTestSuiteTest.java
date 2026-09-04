@@ -30,10 +30,12 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 public class DockerTestSuiteTest {
     private static final String FILE_DB = "infra/docker_compose/docker-compose.yml";
     private static final String FILE_OLD = "infra/docker_compose/docker-compose-without-db.yml";
+    private static final String FILE_FROUD = "infra/docker_compose/docker-compose-fraud.yml";
     private static final String BACKEND_CHECK = "http://localhost:4111/actuator/health";
     private static final long WAIT_DURATION = 30_000;
     private static final String VALIDATION_FIX = "with_validation_fix";
     private static final String DATABASE_FIX = "with_database_with_fix";
+    private static final String FRAUD_FIX = "with_fraud_check_with_approve";
     private static final String API_ITERATION_1 = "apiTests.iteration1_senior";
     private static final String API_ITERATION_2 = "apiTests.iteration2_senior";
     private static final String UI_ITERATION_1 = "uiTests.iteration1_senior";
@@ -44,10 +46,9 @@ public class DockerTestSuiteTest {
         int exitCode = 0;
         exitCode |= runBackendGroup(VALIDATION_FIX);
         exitCode |= runBackendGroup(DATABASE_FIX);
+        exitCode |= runBackendGroup(FRAUD_FIX);
         if (exitCode != 0) {
-            throw new AssertionError(
-                    "One or more backend test groups failed"
-            );
+            throw new AssertionError("One or more backend test groups failed");
         }
     }
 
@@ -133,7 +134,7 @@ public class DockerTestSuiteTest {
 
                 if (VALIDATION_FIX.equals(backendVersion)) {
                     runCleanup();
-                } else if (DATABASE_FIX.equals(backendVersion)) {
+                } else if (DATABASE_FIX.equals(backendVersion) || FRAUD_FIX.equals(backendVersion)) {
                     runDatabaseCleanup();
                 }
             }
@@ -146,7 +147,7 @@ public class DockerTestSuiteTest {
         } finally {
             System.out.println();
             System.out.println("Stopping backend: " + backendVersion);
-            safeDockerDown(composeFile);
+            safeDockerDown(composeFile, backendVersion);
             System.out.println("Backend stopped: " + backendVersion);
         }
     }
@@ -159,6 +160,10 @@ public class DockerTestSuiteTest {
 
         if (DATABASE_FIX.equals(backendVersion)) {
             return FILE_DB;
+        }
+
+        if (FRAUD_FIX.equals(backendVersion)) {
+            return FILE_FROUD;
         }
 
         throw new IllegalArgumentException("Backend version does not exist: " + backendVersion);
@@ -183,22 +188,28 @@ public class DockerTestSuiteTest {
         runProcess(processBuilder);
     }
 
-    private static void dockerDown(String composeFile) {
+    private static void dockerDown(String composeFile, String backendVersion) {
         ProcessBuilder processBuilder = new ProcessBuilder(
                 "docker",
                 "compose",
                 "-f",
                 composeFile,
-                "down"
+                "down",
+                "-v",
+                "--remove-orphans"
         );
+
+        processBuilder
+                .environment()
+                .put("BACKEND_VERSION", backendVersion);
 
         processBuilder.inheritIO();
         runProcess(processBuilder);
     }
 
-    private static void safeDockerDown(String composeFile) {
+    private static void safeDockerDown(String composeFile, String backendVersion) {
         try {
-            dockerDown(composeFile);
+            dockerDown(composeFile, backendVersion);
         } catch (Exception e) {
             System.err.println("Could not stop compose: " + composeFile);
             e.printStackTrace();
@@ -254,11 +265,14 @@ public class DockerTestSuiteTest {
                 .build();
 
         SummaryGeneratingListener summaryListener = new SummaryGeneratingListener();
+
         Launcher launcher = LauncherFactory.create();
         launcher.registerTestExecutionListeners(summaryListener);
         launcher.execute(request);
+
         var summary = summaryListener.getSummary();
         summary.printTo(new PrintWriter(System.out));
+
         if (summary.getTestsFoundCount() == 0) {
             System.out.println();
             System.out.println("NO TESTS FOUND for backend: " + backendVersion);
@@ -273,6 +287,15 @@ public class DockerTestSuiteTest {
 
         System.out.println();
         System.out.println("Tests FAILED for backend: " + backendVersion);
+
+        summary.getFailures().forEach(failure -> {
+            System.err.println();
+            System.err.println("========== TEST FAILURE ==========");
+            System.err.println("Test: " + failure.getTestIdentifier().getDisplayName());
+            System.err.println("Exception: " + failure.getException());
+            failure.getException().printStackTrace(System.err);
+        });
+
         return 1;
     }
 
@@ -325,10 +348,7 @@ public class DockerTestSuiteTest {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Process was interrupted", e);
         } catch (Exception e) {
-            throw new RuntimeException(
-                    "Failed to execute process",
-                    e
-            );
+            throw new RuntimeException("Failed to execute process", e);
         }
     }
 }
