@@ -41,7 +41,10 @@ public class TransferWithFraudCheckTest extends BaseTestSenior {
             requiresManualReview = false,
             additionalVerificationRequired = false
     )
+    //указанные параметры проставляются в заглушку ответа
+
     public void testTransferWithFraudCheck() {
+        // Подготовительные шаги
         user1 = AdminSteps.createUser();
 
         AccountSteps accountSteps1 = new AccountSteps(user1.getUsername(), user1.getPassword());
@@ -53,8 +56,12 @@ public class TransferWithFraudCheckTest extends BaseTestSenior {
         user2 = AdminSteps.createUser();
         AccountSteps accountSteps2 = new AccountSteps(user2.getUsername(), user2.getPassword());
         account2 = accountSteps2.createAccount();
+        //Здесь подготовительные шаги заканчиваются - эту часть можно тоже вынести в steps, например,
+        // или аннотация, например, @PrepareUsers(count = 2) = настойка подготовительных шагов
+
 
         double transferAmount = Math.random() * (depositAmount - 0.1) + 0.1;
+        // рандомное число, меньше, чем депозит для переводов
 
         //Шаги теста - попытка перевода с проверкой на фрод
         transferResponse = accountSteps1.transferWithFraudCheck(  //смотреть на мок, а не настоящий сервис
@@ -65,7 +72,7 @@ public class TransferWithFraudCheckTest extends BaseTestSenior {
 
         softly.assertThat(transferResponse).isNotNull();
 
-
+        //Готовим DTO, которое будет являться ответом
         TransferResponse expectedResponse = TransferResponse.builder()
                 .status("APPROVED")
                 .message("Transfer approved and processed immediately")

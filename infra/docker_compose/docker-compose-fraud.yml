@@ -17,7 +17,7 @@ services:
       retries: 5
 
   nbank:
-    image: nobugsme/nbank:${BACKEND_VERSION}
+    image: nobugsme/nbank:with_fraud_check_with_approve
     container_name: nbank-app
     ports:
       - "4111:4111"
@@ -26,6 +26,7 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       FRAUD_DETECTION_SERVICE_URL: http://host.docker.internal:8081
+      # internal, чтобы wiremock имел возможность постучаться в сеть приложения
     depends_on:
       postgres:
         condition: service_healthy
@@ -39,3 +40,7 @@ services:
 
 volumes:
   postgres_data:
+
+    # Есть два способа поднятия Wiremock:
+    # 1. Указываем явно backend гле находится сервис, который мы хотим замокать и сам сервис поднимаем на docker.internal
+    # 2. Поднимаем Wiremock как отдельный контейнер в том же docker-compose и той же сети
