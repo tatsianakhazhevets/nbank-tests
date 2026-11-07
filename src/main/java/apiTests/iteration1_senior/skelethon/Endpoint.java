@@ -45,7 +45,7 @@ public enum Endpoint {
     ),
 
     TRANSFER_WITH_FRAUD_CHECK(
-            "/accounts/transfer-with-fraud-check", //Fraud check service
+            "/accounts/transfer-with-fraud-check", //Fraud check service, который хотим замокировать
             TransferRequest.class,
             TransferResponse.class
     ),
