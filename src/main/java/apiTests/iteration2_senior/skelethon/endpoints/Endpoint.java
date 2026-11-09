@@ -33,6 +33,11 @@ public enum Endpoint {
             DepositMoneyRequest.class,
             DepositMoneyResponse.class),
 
+    DEPOSIT_FRAUD_CHECK_VERSION_POST(
+            "/accounts/deposit",
+            DepositMoneyFraudCheckVersionRequest.class,
+            DepositMoneyFraudCheckVersionResponse.class),
+
     CUSTOMER_PROFILE_GET(
             "/customer/profile",
             BaseModel.class,
@@ -47,6 +52,16 @@ public enum Endpoint {
             "/customer/accounts",
             BaseModel.class,
             CustomerAccountsResponse.class),
+
+    FRAUD_CHECK_TRANSFER(
+            "/accounts/transfer-with-fraud-check",
+            TransferWithFraudCheckRequest.class,
+            TransferWithFraudCheckResponse.class),
+
+    FRAUD_CHECK_TRANSFER_STATUS(
+            "/accounts/fraud-check",
+            BaseModel.class,
+            FraudCheckStatusResponse.class),
 
     ADMIN_USERS_GET(
             "/admin/users",

@@ -1,0 +1,18 @@
+package apiTests.iteration2_senior.models;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class DepositMoneyFraudCheckVersionResponse extends BaseModel {
+    private int id;
+    private String accountNumber;
+    private double balance;
+    private double depositAmount;
+    private int transactionId;
+}
