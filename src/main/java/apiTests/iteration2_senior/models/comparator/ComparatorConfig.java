@@ -22,6 +22,24 @@ public class ComparatorConfig {
 
             "ChangeUserNameRequest:ChangeUserNameResponse", Set.of(
                     "name=customer.name"
+            ),
+
+            "TransferWithFraudCheckRequest:TransferWithFraudCheckResponse", Set.of(
+                    "senderAccountId=senderAccountId",
+                    "receiverAccountId=receiverAccountId",
+                    "amount=amount"
+            ),
+
+            "TransferWithFraudCheckResponse:TransferWithFraudCheckResponse", Set.of(
+                    "fraudRiskScore=fraudRiskScore",
+                    "receiverAccountId=receiverAccountId",
+                    "requiresVerification=requiresVerification",
+                    "message=message",
+                    "amount=amount",
+                    "status=status",
+                    "senderAccountId=senderAccountId",
+                    "fraudReason=fraudReason",
+                    "requiresManualReview=requiresManualReview"
             )
     );
 }

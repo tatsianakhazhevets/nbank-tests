@@ -1,9 +1,6 @@
 package apiTests.iteration2_senior.steps;
 
-import apiTests.iteration2_senior.models.CreateUserAccountResponse;
-import apiTests.iteration2_senior.models.CreateUserRequest;
-import apiTests.iteration2_senior.models.DepositMoneyRequest;
-import apiTests.iteration2_senior.models.DepositMoneyResponse;
+import apiTests.iteration2_senior.models.*;
 import apiTests.iteration2_senior.skelethon.endpoints.Endpoint;
 import apiTests.iteration2_senior.skelethon.requests.ValidatedCrudRequester;
 import apiTests.iteration2_senior.specs.RequestSpecs;
@@ -22,6 +19,21 @@ public class DepositStep {
         return new ValidatedCrudRequester<DepositMoneyResponse>(
                 RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
                 Endpoint.DEPOSIT_POST,
+                ResponseSpecs.requestReturnsOk())
+                .post(depositMoneyRequest);
+    }
+
+    public static DepositMoneyFraudCheckVersionResponse depositMoneyWithFraudCheckVersion(CreateUserRequest createUserRequest,
+                                                    CreateUserAccountResponse accountId, double deposit) {
+
+        DepositMoneyFraudCheckVersionRequest depositMoneyRequest = DepositMoneyFraudCheckVersionRequest.builder()
+                .accountId(accountId.getId())
+                .amount(deposit)
+                .build();
+
+        return new ValidatedCrudRequester<DepositMoneyFraudCheckVersionResponse>(
+                RequestSpecs.authUserSpec(createUserRequest.getUsername(), createUserRequest.getPassword()),
+                Endpoint.DEPOSIT_FRAUD_CHECK_VERSION_POST,
                 ResponseSpecs.requestReturnsOk())
                 .post(depositMoneyRequest);
     }
