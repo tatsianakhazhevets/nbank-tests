@@ -9,6 +9,7 @@ public enum FraudRiskScoreList {
     TWO_TENTHS(0.2),
     FIFTH_TENTHS(0.5),
     SIX_TENTHS(0.6),
+    EIGHT_TENTHS(0.8),
     NINE_TENTHS(0.9),
     ONE(1.0);
 

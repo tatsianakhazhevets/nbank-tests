@@ -14,6 +14,7 @@ import common_iteration2.annotations.FraudCheckData;
 import common_iteration2.annotations.MyFraudCheckMock;
 import common_iteration2.storage.FraudCheckDataStorage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import static apiTests.iteration2_senior.specs.Descriptions.*;
 import static apiTests.iteration2_senior.specs.FraudMessages.*;
@@ -22,6 +23,7 @@ import static apiTests.iteration2_senior.specs.FraudStatus.*;
 import static apiTests.iteration2_senior.specs.FraudStatusNotes.*;
 
 @APIVersion("with_fraud_check_with_approve")
+@ResourceLock("fraud-check-wiremock-port-8081")
 public class FraudCheckApproveTest extends BaseTest {
 
     @Test

@@ -13,7 +13,8 @@ public enum FraudMessages {
     TRANSFER_REQUIRED_MANUAL_REVIEW("Transfer requires manual review"),
     ADDITIONAL_VERIFICATION_REQUIRED("Additional verification required"),
     MIDDLE_RISK_TRANSACTION("Middle risk transaction"),
-    UNEXPECTED_ERROR_DURING_FRAUD_CHECK("Unexpected error during fraud check: 500 Server Error: [no body]");
+    UNEXPECTED_ERROR_DURING_FRAUD_CHECK_503("Unexpected error during fraud check: 503 Service Unavailable: \"{\"status\":\"SUCCESS\",\"decision\":\"APPROVE\",\"riskScore\":0.5,\"reason\":\"Middle risk transaction\",\"requiresManualReview\":true,\"additionalVerificationRequired\":false}\""),
+    FRAUD_DETECTION_SERVICE_IS_CURRENTLY_UNAVAILABLE("Fraud detection service is currently unavailable");
 
     private final String message;
 }

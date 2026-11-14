@@ -14,6 +14,7 @@ import common_iteration2.annotations.FraudCheckData;
 import common_iteration2.annotations.MyFraudCheckMock;
 import common_iteration2.storage.FraudCheckDataStorage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import static apiTests.iteration2_senior.specs.Descriptions.*;
 import static apiTests.iteration2_senior.specs.FraudMessages.*;
@@ -22,19 +23,85 @@ import static apiTests.iteration2_senior.specs.FraudStatus.*;
 import static apiTests.iteration2_senior.specs.FraudStatusNotes.*;
 
 @APIVersion("with_fraud_check_with_approve")
+@ResourceLock("fraud-check-wiremock-port-8081")
 public class FraudCheckVerificationRequiredTest extends BaseTest {
 
     @Test
     @FraudCheckData
     @MyFraudCheckMock(
-            status = "VERIFICATION_REQUIRED",
+            status = "SUCCESS",
             decision = "VERIFICATION_REQUIRED",
             riskScore = 0.6,
             reason = "Middle risk transaction",
-            requiresManualReview = true,
+            requiresManualReview = false,
+            additionalVerificationRequired = false
+    )
+    public void verificationScenarioWithDecisionVerificationRequired() {
+        // 1.Test data
+        double depositAmount = FraudCheckDataStorage.getDepositAmount();
+        double transferAmount = Math.random() * (depositAmount - 0.1) + 0.1;
+
+        // 2. Test steps
+        TransferWithFraudCheckRequest transferWithFraudCheckRequest = TransferWithFraudCheckRequest.builder()
+                .senderAccountId(FraudCheckDataStorage.getFirstUserAccount().getId())
+                .receiverAccountId(FraudCheckDataStorage.getSecondUserAccount().getId())
+                .amount(transferAmount)
+                .description(TEST_TRANSFER_WITH_FRAUD_CHECK.getDescriptions())
+                .build();
+
+        TransferWithFraudCheckResponse transferWithFraudCheckResponse = new ValidatedCrudRequester<TransferWithFraudCheckResponse>(
+                RequestSpecs.authUserSpec(
+                        FraudCheckDataStorage.getFirstUser().getUsername(),
+                        FraudCheckDataStorage.getFirstUser().getPassword()),
+                Endpoint.FRAUD_CHECK_TRANSFER,
+                ResponseSpecs.requestReturnsOk())
+                .post(transferWithFraudCheckRequest);
+
+        //3. Test Results
+        softly.assertThat(transferWithFraudCheckResponse).isNotNull();
+        AssertingClass.assertThat(transferWithFraudCheckRequest, transferWithFraudCheckResponse).match();
+
+        TransferWithFraudCheckResponse transferWithFraudCheckExpectedResponse = TransferWithFraudCheckResponse.builder()
+                .fraudRiskScore(SIX_TENTHS.getScore())
+                .receiverAccountId(FraudCheckDataStorage.getSecondUserAccount().getId())
+                .requiresVerification(false)
+                .message(ADDITIONAL_VERIFICATION_REQUIRED.getMessage())
+                .amount(transferAmount)
+                .status(VERIFICATION_REQUIRED.getStatus())
+                .senderAccountId(FraudCheckDataStorage.getFirstUserAccount().getId())
+                .fraudReason(MIDDLE_RISK_TRANSACTION.getMessage())
+                .requiresManualReview(false)
+                .build();
+
+        AssertingClass.assertThat(transferWithFraudCheckExpectedResponse, transferWithFraudCheckResponse).match();
+
+        int transactionId = transferWithFraudCheckResponse.getTransactionId();
+
+        FraudCheckStatusResponse fraudCheckStatusResponse = new ValidatedCrudRequester<FraudCheckStatusResponse>(
+                RequestSpecs.authUserSpec(
+                        FraudCheckDataStorage.getFirstUser().getUsername(),
+                        FraudCheckDataStorage.getFirstUser().getPassword()),
+                Endpoint.FRAUD_CHECK_TRANSFER_STATUS,
+                ResponseSpecs.requestReturnsOk())
+                .get(transactionId);
+
+        softly.assertThat(fraudCheckStatusResponse.getStatus())
+                .isEqualTo(NO_FRAUD_CHECK_REQUIRED.getStatus());
+        softly.assertThat(fraudCheckStatusResponse.getNote())
+                .isEqualTo(THIS_TRANSACTION_DOES_NOT_REQUIRED_FRAUD_CHECKING.getNote());
+    }
+
+    @Test
+    @FraudCheckData
+    @MyFraudCheckMock(
+            status = "SUCCESS",
+            decision = "APPROVED",
+            riskScore = 0.6,
+            reason = "Middle risk transaction",
+            requiresManualReview = false,
             additionalVerificationRequired = true
     )
-    public void approvedScenario() {
+    public void verificationScenarioWithAdditionalVerificationRequiredTrue() {
         // 1.Test data
         double depositAmount = FraudCheckDataStorage.getDepositAmount();
         double transferAmount = Math.random() * (depositAmount - 0.1) + 0.1;
@@ -68,7 +135,7 @@ public class FraudCheckVerificationRequiredTest extends BaseTest {
                 .status(VERIFICATION_REQUIRED.getStatus())
                 .senderAccountId(FraudCheckDataStorage.getFirstUserAccount().getId())
                 .fraudReason(MIDDLE_RISK_TRANSACTION.getMessage())
-                .requiresManualReview(true)
+                .requiresManualReview(false)
                 .build();
 
         AssertingClass.assertThat(transferWithFraudCheckExpectedResponse, transferWithFraudCheckResponse).match();

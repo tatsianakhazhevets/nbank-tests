@@ -4,8 +4,10 @@ import apiTests.iteration2_senior.models.FraudCheckMockResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.http.Fault;
 import common_iteration2.annotations.MyFraudCheckMock;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -47,18 +49,22 @@ public class MyFraudCheckMockExtension implements BeforeEachCallback, AfterEachC
 
         String responseBody = objectMapper.writeValueAsString(response);
 
-        if (config.testType().equals("positive")) {
-            stubFor(post(urlPathMatching(config.endpoint()))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", "application/json")
-                            .withBody(responseBody)));
-        } else {
-            stubFor(post(urlPathMatching(config.endpoint()))
-                    .willReturn(aResponse()
-                            .withStatus(500)
-                            .withHeader("Content-Type", "application/json")));
+        ResponseDefinitionBuilder responseDefinitionBuilder = aResponse()
+                .withStatus(config.httpStatusCode())
+                .withHeader("Content-Type", "application/json")
+                .withBody(responseBody);
+
+        if (config.delayMs() > 0) {
+            responseDefinitionBuilder.withFixedDelay(config.delayMs());
         }
+
+        if (!config.fault().equals("NONE")) {
+            Fault fault = Fault.valueOf(config.fault());
+            responseDefinitionBuilder.withFault(fault);
+        }
+
+        stubFor(post(urlPathMatching(config.endpoint()))
+                .willReturn(responseDefinitionBuilder));
     }
 
     @Override
