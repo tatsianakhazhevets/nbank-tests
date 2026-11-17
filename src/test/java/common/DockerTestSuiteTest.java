@@ -43,11 +43,18 @@ public class DockerTestSuiteTest {
 
     @Test
     void runAllTests() {
-        int exitCode = 0;
-        exitCode |= runBackendGroup(VALIDATION_FIX);
-        exitCode |= runBackendGroup(DATABASE_FIX);
-        exitCode |= runBackendGroup(FRAUD_FIX);
-        if (exitCode != 0) {
+        int validationExitCode = runBackendGroup(VALIDATION_FIX);
+        System.out.println("VALIDATION_FIX exit code: " + validationExitCode);
+
+        int databaseExitCode = runBackendGroup(DATABASE_FIX);
+        System.out.println("DATABASE_FIX exit code: " + databaseExitCode);
+
+        int fraudExitCode = runBackendGroup(FRAUD_FIX);
+        System.out.println("FRAUD_FIX exit code: " + fraudExitCode);
+
+        if (validationExitCode != 0
+                || databaseExitCode != 0
+                || fraudExitCode != 0) {
             throw new AssertionError("One or more backend test groups failed");
         }
     }
